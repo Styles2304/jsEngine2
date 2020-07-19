@@ -21,18 +21,18 @@ class vect {
         this.x = this.x / scal;
         this.y = this.y / scal;
     }
-    mag() {
+    getMag() {
         return Math.sqrt((this.x * this.x) + (this.y * this.y));
     }
     norm() {
-        this.x = this.x / this.mag();
-        this.y = this.y / this.mag();
+        this.x = this.x / this.getMag();
+        this.y = this.y / this.getMag();
     }
     setMag(mag) {
         this.norm();
         this.mult(mag);
     }
     limit(max) {
-        if (this.mag() > max) { this.setMag(max); }
+        if (this.getMag() > max) { this.setMag(max); }
     }
 }
