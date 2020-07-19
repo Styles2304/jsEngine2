@@ -1,9 +1,11 @@
 "use strict";
 
+// Static methods?
+
 class vect {
     constructor(x, y) {
-        this.x = x;
-        this.y = y;
+        this.x = x || 0;
+        this.y = y || 0;
     }
     add(vect) {
         this.x += vect.x;
