@@ -55,6 +55,18 @@ class Ent {
         // World Collision
         //=======================================================//
             if (_p.collideWithWorld) {
+
+                // Top Bounds
+                if (
+                    _p.bounding[0].y <= 0 ||
+                    _p.bounding[1].y <= 0 ||
+                    _p.bounding[2].y <= 0 ||
+                    _p.bounding[3].y <= 0
+                ) {
+                    this.pos.y = 0.1;
+                    _p.vel.y = _p.vel.y * -1;
+                }
+
                 // Bottom Bounds
                 if (
                     _p.bounding[0].y >= this.world.height ||
@@ -62,8 +74,30 @@ class Ent {
                     _p.bounding[2].y >= this.world.height ||
                     _p.bounding[3].y >= this.world.height
                 ) {
-                    this.pos.y = this.world.height - (this.height + .1);
+                    this.pos.y = this.world.height - (this.height + 0.1);
                     _p.vel.y = _p.vel.y * -1;
+                }
+
+                // Left Bounds
+                if (
+                    _p.bounding[0].x <= 0 ||
+                    _p.bounding[1].x <= 0 ||
+                    _p.bounding[2].x <= 0 ||
+                    _p.bounding[3].x <= 0
+                ) {
+                    this.pos.x = 0.1;
+                    _p.vel.x = _p.vel.x * -1;
+                }
+
+                // Right Bounds
+                if (
+                    _p.bounding[0].x >= this.world.width ||
+                    _p.bounding[1].x >= this.world.width ||
+                    _p.bounding[2].x >= this.world.width ||
+                    _p.bounding[3].x >= this.world.width
+                ) {
+                    this.pos.x = this.world.width - (this.width +0.1);
+                    _p.vel.x = _p.vel.x * -1;
                 }
             }
 
