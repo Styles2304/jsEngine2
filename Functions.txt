@@ -1,0 +1,17 @@
+To Do
+====================
+- Add draw functions
+
+GAME (canvas, container, width, height, fps, debug)
+	refresh() - clears the canvas
+	addState(name, oneTime, doLoop) - Adds state to the game
+	startState(state) - Starts the state and stops all others
+	run() - Initiates the game
+
+State (game, oneTime, doLoop)
+	run() - Runs the state
+	addWorld(width, height) - Adds a world to the state
+
+World (game, width, height)
+	debugDraw() - Draws a red line around the edge of the world for debugging purposes
+	addEnt(name, x, y, width, height) - Adds Entity to the world
