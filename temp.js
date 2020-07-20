@@ -6,9 +6,11 @@ class ent {
         this.mass = mass; // Create "constructor" for enabling physics?
     }
 
+    // enablePhysics(mass, )
+
     applyForce(force) {
-        force.div(this.mass); // Convert to static
-        this.acc.add(force);
+        var _f = vect.div(force, this.mass);
+        this.acc.add(_f);
     }
 
     classUpdate() {
@@ -21,6 +23,7 @@ class ent {
     // Example update //
     update() {
         var gravity = new vect(0,0.3);
+        gravity.mult(this.mass); // Gravity is a unique force that sort of ignores mass
         this.applyForce(gravity);
     }
     // End Example //
