@@ -14,4 +14,7 @@ State (game, oneTime, doLoop)
 
 World (game, width, height)
 	debugDraw() - Draws a red line around the edge of the world for debugging purposes
-	addEnt(name, x, y, width, height) - Adds Entity to the world
+	addEnt(name, x, y, width, height, physics) - Adds Entity to the world
+
+Ent (game, world, x, y, width, height, physics, mass)
+	applyForce(force) - Applies vector force to entity with physics enabled
