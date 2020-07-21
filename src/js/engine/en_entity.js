@@ -4,13 +4,13 @@
 //=======================================================//
 
 class Ent {
-    constructor(game, world, x, y, width, height, physics) {
+    constructor(game, world, x, y, width, height, physics, mass) {
         this.g = game;
         this.ctx = game.CONTEXT;
         this.pos = new Vect(x, y);
         this.width = width || 0;
         this.height = height || 0;
-        this.heatlh = { cur: 100, max: 100 }
+        this.health = { cur: 100, max: 100 }
         this.center = {
             x: Math.floor(this.width / 2),
             y: Math.floor(this.height / 2)
@@ -21,7 +21,7 @@ class Ent {
             enabled: physics,
             collideWithWorld: false,
             worldBounce: false,
-            mass: 1,
+            mass: mass,
             bounding: [
                 { x: this.pos.x, y: this.pos.y },
                 { x: this.pos.x + this.width, y: this.pos.y },
@@ -29,7 +29,7 @@ class Ent {
                 { x: this.pos.x, y: this.pos.y + this.height }
             ],
             acc: new Vect(),
-            vel: new Vect(),
+            vel: new Vect()
         }
         this.initialized = false;
     }
@@ -42,7 +42,7 @@ class Ent {
     // Physics
     //=======================================================//
         const _p = this.physics;
-        _p.bBounce = new Vect(0, 10);
+        _p.bounce = -1;
         if (_p.enabled) {
 
         //=======================================================//
@@ -50,54 +50,28 @@ class Ent {
         //=======================================================//
             _p.vel.add(_p.acc);
             this.pos.add(_p.vel);
-
         //=======================================================//
         // World Collision
         //=======================================================//
             if (_p.collideWithWorld) {
-
-                // Top Bounds
-                if (
-                    _p.bounding[0].y <= 0 ||
-                    _p.bounding[1].y <= 0 ||
-                    _p.bounding[2].y <= 0 ||
-                    _p.bounding[3].y <= 0
-                ) {
-                    this.pos.y = 0.1;
-                    _p.vel.y = _p.vel.y * -1;
+                if (this.pos.y < 0) { // Top
+                    this.pos.y = 0;
+                    _p.vel.y *= _p.bounce;
                 }
 
-                // Bottom Bounds
-                if (
-                    _p.bounding[0].y >= this.world.height ||
-                    _p.bounding[1].y >= this.world.height ||
-                    _p.bounding[2].y >= this.world.height ||
-                    _p.bounding[3].y >= this.world.height
-                ) {
-                    this.pos.y = this.world.height - (this.height + 0.1);
-                    _p.vel.y = _p.vel.y * -1;
+                if (this.pos.y + this.height> this.world.height) { // Bottom
+                    this.pos.y = this.world.height - this.height;
+                    _p.vel.y *= _p.bounce;
                 }
 
-                // Left Bounds
-                if (
-                    _p.bounding[0].x <= 0 ||
-                    _p.bounding[1].x <= 0 ||
-                    _p.bounding[2].x <= 0 ||
-                    _p.bounding[3].x <= 0
-                ) {
-                    this.pos.x = 0.1;
-                    _p.vel.x = _p.vel.x * -1;
+                if (this.pos.x < 0) { // Left
+                    _p.vel.x *= _p.bounce;
+                    this.pos.x = 0;
                 }
-
-                // Right Bounds
-                if (
-                    _p.bounding[0].x >= this.world.width ||
-                    _p.bounding[1].x >= this.world.width ||
-                    _p.bounding[2].x >= this.world.width ||
-                    _p.bounding[3].x >= this.world.width
-                ) {
-                    this.pos.x = this.world.width - (this.width +0.1);
-                    _p.vel.x = _p.vel.x * -1;
+                
+                if (this.pos.x + this.width > this.world.width) { // Right
+                    this.pos.x = this.world.width - this.width;
+                    _p.vel.x *= _p.bounce;
                 }
             }
 
@@ -111,9 +85,10 @@ class Ent {
                 { x: this.pos.x, y: this.pos.y + this.height }
             ];
 
-            // Resets acceleration
+        //=======================================================//
+        // Zero out acceleration
+        //=======================================================//
             _p.acc.mult(0);
-
         }
     }
 
@@ -136,8 +111,10 @@ class Ent {
     }
 
     applyForce(force) {
-        var _f = Vect.div(force, this.physics.mass);
-        this.physics.acc.add(_f);
+        if (!isNaN(force.x)) {
+            var _f = Vect.div(force, this.physics.mass);
+            this.physics.acc.add(_f);
+        }
     }
 
     init() {}
