@@ -76,9 +76,16 @@ class Vect {
     }
 
     limit(max) {
-        // if (this.getMag() > max) { this.setMag(max); }
         if (this.magSq() > max*max) {
             this.setMag(max);
         }
+    }
+
+    copy() {
+        return new Vect(this.x, this.y);
+    }
+    
+    static copy(v) {
+        return new Vect(v.x, v.y);
     }
 }
