@@ -25,7 +25,7 @@ class World {
         this.ctx.strokeRect(0, 0, this.width, this.height);
     }
 
-    addEnt(name, x, y, width, height, physics) {
-        this.ents[name] = new Ent(this.g, this, x, y, width || 0, height || 0, physics || false);
+    addEnt(name, x, y, width, height, physics, mass) {
+        this.ents[name] = new Ent(this.g, this, x, y, width || 0, height || 0, physics || false, mass || 1);
     }
 }
