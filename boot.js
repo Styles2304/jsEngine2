@@ -2,44 +2,37 @@
 
 let Boot = Game.states.Boot;
 Boot.start = function() { if (Game.debug) { console.log("Boot State"); } }
+Boot.wind = null;
 
 Boot.init = function() {
-    for (var a = 0; a < 5; a++) {
-        var _mass = Math.random() * 2;
+    for (var a = 0; a < 10; a++) {
+        var _mass = Math.floor(Math.random() * (3-1) + 1);
         this.curWorld.addEnt(
             "cube" + a,
             Math.floor(Math.random() * this.curWorld.width),
-            this.curWorld.height/3,
-            _mass * 20, _mass * 20,
-            true,
-            _mass
-        );
+            5,
+            _mass * 20, _mass * 20);
 
         var _cube = this.curWorld.ents["cube" + a];
 
         _cube.physics.collideWithWorld = true;
 
         _cube.draw = function() {
-            this.ctx.fillStyle = "#FF0";
+            this.ctx.fillStyle = "rgba(255,255,0,.5)";
             this.ctx.fillRect(this.pos.x, this.pos.y, this.width, this.height);
         }
     }
 
+    this.curWorld.enablePhysics();
+
+    this.wind = new Vect(Math.random() * (1+1) - 1, 0);
+    console.log(this.wind.x);
 }
 
 Boot.update = function() {
-    var _gravity = new Vect(0,0.3);
-    var _wind = new Vect(-0.3, 0);
-
-    for (var a = 0; a < 5; a++) {
+    for (var a = 0; a < 10; a++) {
         let _cube = this.curWorld.ents["cube" + a];
-        _cube.applyForce(Vect.mult(_gravity, _cube.physics.mass));
-        _cube.applyForce(_wind);
-
-        var _fric = _cube.physics.vel.copy();
-        _fric.setMag(-0.1);
-
-        // _cube.applyForce(_fric);
+        _cube.applyForce(this.wind);
     }
 }
 
