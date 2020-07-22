@@ -4,8 +4,8 @@
 //=======================================================//
 
 class Ent {
-    constructor(game, world, x, y, width, height, physics, mass) {
-        this.g = game;
+    constructor(game, world, x, y, width, height, mass) {
+        this.game = game;
         this.ctx = game.CONTEXT;
         this.pos = new Vect(x, y);
         this.width = width || 0;
@@ -18,7 +18,7 @@ class Ent {
         this.worldPos = { x: x, y: y }
         this.world = world;
         this.physics = {
-            enabled: physics,
+            enabled: false,
             collideWithWorld: true,
             onSurface: false,
             mass: mass,
@@ -32,6 +32,8 @@ class Ent {
             vel: new Vect(),
         }
         this.initialized = false;
+
+        this.world.ents.push(this);
     }
 
     classInit() {
@@ -111,7 +113,7 @@ class Ent {
     }
 
     debugDraw() {
-        if (this.g.debug) {
+        if (this.game.debug) {
             this.ctx.strokeStyle = "#F0F";
             this.ctx.lineWidth = 2;
             this.ctx.beginPath();
