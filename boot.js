@@ -1,3 +1,5 @@
+import { Ent, TestClass } from "./src/js/engine/en_entity";
+
 "use strict";
 
 let Boot = Game.states.Boot;
