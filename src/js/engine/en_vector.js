@@ -3,12 +3,19 @@
 // Vector Class
 //=======================================================//
 
+var _test = new Vect(0,0);
+_test.add()
+
 class Vect {
     constructor(x, y) {
         this.x = x || 0;
         this.y = y || 0;
     }
 
+    /**
+     * 
+     * @param {Array} v - This is a test
+     */
     add(v) {
         this.x += v.x;
         this.y += v.y;
