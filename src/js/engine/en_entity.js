@@ -3,6 +3,7 @@
 // Entity Class
 //=======================================================//
 
+<<<<<<< HEAD
 export class Ent {
     /**
      * 
@@ -17,6 +18,11 @@ export class Ent {
      */
     constructor(game, world, x, y, width, height, physics, mass) {
         this.g = game;
+=======
+class Ent {
+    constructor(game, world, x, y, width, height, mass) {
+        this.game = game;
+>>>>>>> ce0b857f1ee6b74877892be00d0a9327af0519b8
         this.ctx = game.CONTEXT;
         this.pos = new Vect(x, y);
         this.width = width || 0;
@@ -29,7 +35,7 @@ export class Ent {
         this.worldPos = { x: x, y: y }
         this.world = world;
         this.physics = {
-            enabled: physics,
+            enabled: false,
             collideWithWorld: true,
             onSurface: false,
             mass: mass,
@@ -43,6 +49,8 @@ export class Ent {
             vel: new Vect(),
         }
         this.initialized = false;
+
+        this.world.ents.push(this);
     }
 
     classInit() {
@@ -122,7 +130,7 @@ export class Ent {
     }
 
     debugDraw() {
-        if (this.g.debug) {
+        if (this.game.debug) {
             this.ctx.strokeStyle = "#F0F";
             this.ctx.lineWidth = 2;
             this.ctx.beginPath();
