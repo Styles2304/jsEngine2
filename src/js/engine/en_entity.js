@@ -3,26 +3,9 @@
 // Entity Class
 //=======================================================//
 
-<<<<<<< HEAD
-export class Ent {
-    /**
-     * 
-     * @param {Object} game - Reference to the main GAME object 
-     * @param {Object} world - Current World
-     * @param {s} x 
-     * @param {Vect} y 
-     * @param {scal} width 
-     * @param {*} height 
-     * @param {*} physics 
-     * @param {*} mass 
-     */
-    constructor(game, world, x, y, width, height, physics, mass) {
-        this.g = game;
-=======
 class Ent {
     constructor(game, world, x, y, width, height, mass) {
         this.game = game;
->>>>>>> ce0b857f1ee6b74877892be00d0a9327af0519b8
         this.ctx = game.CONTEXT;
         this.pos = new Vect(x, y);
         this.width = width || 0;
