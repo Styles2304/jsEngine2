@@ -4,6 +4,16 @@
 //=======================================================//
 
 class Ent {
+    /**
+     * Testing
+     * @param {*} game - Reference to the master GAME object
+     * @param {*} world 
+     * @param {*} x 
+     * @param {*} y 
+     * @param {*} width 
+     * @param {*} height 
+     * @param {*} mass 
+     */
     constructor(game, world, x, y, width, height, mass) {
         this.game = game;
         this.ctx = game.CONTEXT;
