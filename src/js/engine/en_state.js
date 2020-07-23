@@ -5,12 +5,12 @@
 
 class State {
     constructor(game, oneTime, doLoop) {
-        this.g = game;
+        this.game = game;
         this.oneTime = oneTime;
         this.doLoop = doLoop;
         this.initialized = false;
         this.worlds = [];
-        this.worlds.push(new World(game, this.g.STAGE.width, this.g.STAGE.height));
+        this.worlds.push(new World(game, this.game.STAGE.width, this.game.STAGE.height));
         this.curWorld = this.worlds[0];
     }
         
@@ -48,14 +48,14 @@ class State {
 
         // doLoop
             this.runInterval = setInterval(function() {
-                that.g.refresh();
+                that.game.refresh();
 
                 for (var a = 0; a < that.doLoop.length; a++) {
                     // Calls the update functions on children that have it
                     if (that.doLoop[a] == "update") {
-                        Object.keys(that.curWorld.ents).forEach(key => {
-                            that.curWorld.ents[key].classUpdate(key);
-                            that.curWorld.ents[key].update();
+                        that.curWorld.ents.forEach(function(ent) {
+                            ent.classUpdate();
+                            ent.update();
                         });
                     }
 
@@ -63,20 +63,27 @@ class State {
                     if (that.doLoop[a] == "draw") {
                         // Add Draw functions
 
-                        if (that.g.debug) {
+                        if (that.game.debug) {
                             that.curWorld.debugDraw();
                         }
 
+                        that.curWorld.ents.forEach(function(ent) {
+                            ent.draw();
+                            ent.debugDraw();
+                        });
+
+                        /*
                         Object.keys(that.curWorld.ents).forEach(key => {
                             that.curWorld.ents[key].draw();
                             that.curWorld.ents[key].debugDraw();
                         });
+                        */
                     }
 
                     that[that.doLoop[a]]();
                 }
-            }, 1000 / this.g.FPS);
+            }, 1000 / this.game.FPS);
     }
 
-    addWorld(width, height) { this.worlds.push(new World(this.g, width, height)); }
+    addWorld(width, height) { this.worlds.push(new World(this.game, width, height)); }
 }
