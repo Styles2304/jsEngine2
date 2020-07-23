@@ -3,7 +3,18 @@
 // Entity Class
 //=======================================================//
 
-class Ent {
+export class Ent {
+    /**
+     * 
+     * @param {Object} game - Reference to the main GAME object 
+     * @param {Object} world - Current World
+     * @param {s} x 
+     * @param {Vect} y 
+     * @param {scal} width 
+     * @param {*} height 
+     * @param {*} physics 
+     * @param {*} mass 
+     */
     constructor(game, world, x, y, width, height, physics, mass) {
         this.g = game;
         this.ctx = game.CONTEXT;
