@@ -1,6 +1,7 @@
 "use strict";
 /**
  * Vector Class
+ * @typedef {{}} Vector
  */
     class Vect {
         /**
