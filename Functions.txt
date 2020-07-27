@@ -1,6 +1,7 @@
 To Do
 ====================
-- Add draw functions
+- Camera Movement
+- Rotating Bounding Box
 
 GAME (canvas, container, width, height, fps, debug)
 	refresh() - clears the canvas
