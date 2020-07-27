@@ -4,7 +4,7 @@
         /**
          * The World class contained by a State. Contains the camera, all entities, and
          * Cells
-         * @param {{}} Game Reference to the master GAME object
+         * @param {Game} Game Reference to the master GAME object
          * @param {Number} width Width of the World
          * @param {Number} height Height of the World
          */
