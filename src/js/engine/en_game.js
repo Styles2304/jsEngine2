@@ -1,19 +1,44 @@
-/** GAME Class */
+/**
+ * GAME Class
+ * @typedef {{}} Game
+ */
     class GAME {
         /**
          * The "Mother Class" that contains all game information
-         * @param {String} canvas id of the Canvas Element
-         * @param {String} container id of the Container Element
-         * @param {Number} width Width of game screen
-         * @param {Number} height Height of game screen
-         * @param {Number} fps Frames per second
+         *
+         * @constructor
+         * @param {String}  container id of the Container Element
+         * @param {Number}  width Width of game screen
+         * @param {Number}  height Height of game screen
+         * @param {Number}  fps Frames per second
          * @param {Boolean} [debug=false] Turn debug on for the entire Game
+         *
+         * @property {Element}  STAGE       Canvas Element
+         * @property {Element}  CONTAINER   Div or some other Container placed by the user to contain the STAGE
+         * @property {Context}  CONTEXT     2d Context of the Canvas
+         * @property {Number}   FPS         Animation frames called per second
+         * @property {{}}       keys        Object containing Boolean data of the keyboard
+         * @property {Boolean}  keys.enter  Enter
+         * @property {Boolean}  keys.space  Spacebar
+         * @property {Boolean}  keys.left   Left Arrow
+         * @property {Boolean}  keys.up     Up Arrow
+         * @property {Boolean}  keys.right  Right Arrow
+         * @property {Boolean}  keys.down   Down Arrow
+         * @property {Boolean}  keys.one    Number keys spelled out "one" - "zero"
+         * @property {Boolean}  keys.a      Letter keys "A" - "Z"
+         * @property {{}}       mouse       Object containing positional and Boolean button data of the mouse
+         * @property {Vector}   mouse.pos   A Vector containing the current mouse position inside the canvas
+         * @property {{}}       states      Object containing references to all States
+         * @property {State}    curState    Reference to the currently selected State
+         * @property {Boolean}  debug       Game debug
+         *
          */
-        constructor(canvas, container, width, height, fps, debug) {
-            this.STAGE = document.getElementById(canvas);
+        constructor(container, width, height, fps, debug) {
+            this.STAGE = document.createElement("canvas");
             this.STAGE.width = width;
             this.STAGE.height = height;
             this.CONTAINER = document.getElementById(container);
+                this.CONTAINER.appendChild(this.STAGE); // Adds the canvas to the container
             this.CONTEXT = this.STAGE.getContext("2d");
             this.FPS = fps;
             this.keys = {
@@ -53,10 +78,7 @@
                 z: false
             }
             this.mouse = {
-                pos: {
-                    x: 0,
-                    y: 0
-                }
+                pos: new Vect()
             }
             this.states = {}
 
@@ -66,6 +88,9 @@
             this.run();
         }
 
+        /**
+         * Method to wipe the canvas - called at the beginning of every frame
+         */
         refresh() { 
             this.CONTEXT.clearRect(
                 this.curState.curWorld.camera.pos.x,
@@ -73,13 +98,19 @@
                 this.STAGE.width, this.STAGE.height
             );
         }
+
         /**
          * Adds a new state to the GAME
-         * @param {string} name
-         * @param {[]} oneTime Array of functions to only call once
-         * @param {[]} doLoop Array of functions to call every frame
+         * @param {string}  name        Unique name given to the state
+         * @param {[]}      oneTime     Array of functions to only call once
+         * @param {[]}      doLoop      Array of functions to call every frame
          */
         addState(name, oneTime, doLoop) { this.states[name] = new State(this, oneTime, doLoop); }
+
+        /**
+         * Starts the specified State
+         * @param {State}   
+         */
         startState(state) {
             if (this.curState !== null) {
                 clearInterval(this.curState.runInterval);
@@ -88,6 +119,9 @@
             this.curState.run();
         }
 
+        /**
+         * Method to initiate the game and event listeners
+         */
         run() {
             // Init Message
                 if (this.debug) { console.log("Game Created"); }
