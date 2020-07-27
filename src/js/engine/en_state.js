@@ -1,5 +1,8 @@
 "use strict";
-/** State Class */
+/**
+ * State Class
+ * @typedef {{}} State
+ */
     class State {
         /**
          * 
