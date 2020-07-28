@@ -1,10 +1,13 @@
 "use strict";
-/** Entity Class */
-    class Ent {
+/**
+ * Entity Class
+ * @typedef {{}} Entity
+ */
+    class Entity {
         /**
-         * Base Entity class
-         * @param {{}} Game Reference to the master GAME object
-         * @param {{}}} World Reference to World the Entity belongs to
+         * Base Entity class with it's own Init(), Update(), and Draw() functions
+         * @param {GAME} Game Reference to the master GAME object
+         * @param {World} World Reference to World the Entity belongs to
          * @param {Number} x Canvas X Position
          * @param {Number} y Canvas Y Position
          * @param {Number} width Width of the Entity
@@ -14,22 +17,22 @@
         constructor(Game, World, x, y, width, height, mass) {
             this.Game = Game;
             this.ctx = Game.CONTEXT;
-            this.pos = new Vect(x, y);
+            this.pos = new Vector(x, y);
             this.width = width || 0;
             this.height = height || 0;
-            this.center = new Vect(Math.floor(this.width / 2), Math.floor(this.height / 2));
-            this.offset = new Vect(0,0);
-            this.relativePos = Vect.sub(this.pos, this.offset);
+            this.center = new Vector(Math.floor(this.width / 2), Math.floor(this.height / 2));
+            this.offset = new Vector(0,0);
+            this.relativePos = Vector.sub(this.pos, this.offset);
             this.World = World;
             this.physics = {
                 enabled: false,
                 collideWithWorld: true,
                 onSurface: false,
                 mass: mass,
-                acc: new Vect(), /** Force: Acceleration */
-                vel: new Vect(), /** Force: Velocity */
-                frc: new Vect(), /** Force: Friction */
-                drg: new Vect(), /** Force: Drag */
+                acc: new Vector(), /** Force: Acceleration */
+                vel: new Vector(), /** Force: Velocity */
+                frc: new Vector(), /** Force: Friction */
+                drg: new Vector(), /** Force: Drag */
                 ang: 0, /** Current Angle of Entity */
                 aAcc: 0, /** Force: Angular Acceleration */
                 aVel: 0 /** Force: Angular Velocity */
@@ -42,8 +45,17 @@
             this.World.ents.push(this);
         }
 
+        /**
+         * Anything that needs to be initiated by the class by default
+         * @method classInit
+         */
         classInit() {}
 
+        /**
+         * All Processes that need to be updated by the class by default
+         * The powerhouse of the Entity class
+         * @method classUpdate
+         */
         classUpdate() {
         /**
          * Physics
@@ -55,7 +67,7 @@
             /**
              * Pre-defined forces: Gravity, Friction, Drag
              */
-                this.applyForce(Vect.mult(_wp.gravity, _p.mass)); // Gravity ignoring mass
+                this.applyForce(Vector.mult(_wp.gravity, _p.mass)); // Gravity ignoring mass
 
                 if (_p.onSurface) { // Only apply friction touching a surface
                     _p.frc = _p.vel.copy();
@@ -90,7 +102,7 @@
             /**
              * Relative Position Update
              */
-                this.relativePos = Vect.sub(this.pos, this.offset);
+                this.relativePos = Vector.sub(this.pos, this.offset);
 
             /**
              * World Collision
@@ -139,7 +151,7 @@
             /**
              * Relative Position Update
              */
-                this.relativePos = Vect.sub(this.pos, this.offset);
+                this.relativePos = Vector.sub(this.pos, this.offset);
 
             /**
              * Bounding Box Update
@@ -148,6 +160,10 @@
             }
         }
 
+        /**
+         * If (GAME.debug) this method draws the Origin and Boundingbox of the Entity
+         * @method debugDraw
+         */
         debugDraw() {
             if (this.Game.debug) {
                 this.ctx.strokeStyle = "#F0F";
@@ -168,15 +184,21 @@
             }
         }
 
+        /**
+         * Applies forces to an Entity in a physics enabled World
+         * @method applyForce
+         * @param {Vector} force
+         */
         applyForce(force) {
             if (!isNaN(force.x)) {
-                var _f = Vect.div(force, this.physics.mass);
+                var _f = Vector.div(force, this.physics.mass);
                 this.physics.acc.add(_f);
             }
         }
 
         /**
          * Updates the bounding box based on current positioning and rotation
+         * @method boundingUpdate
          * @returns {array} An array of vectors
          */
         boundingUpdate() {
@@ -191,14 +213,20 @@
             ];
         }
 
+        /**
+         * Enables physics on the Entity. Called by World when physics are enabled
+         * @method enablePhysics
+         */
         enablePhysics() {
             this.physics.enabled = true;
         };
 
+        /**
+         * Generally overwritten by the user
+         * This draws the default sprite for the Entity
+         * @method draw
+         */
         draw() {
-            /**
-             * Default draw function for Entity so it is visible when added in world
-             */
             var _r = this.width/2,
                 _x = this.pos.x + (this.center.x - this.offset.x),
                 _y = this.pos.y + (this.center.y - this.offset.y);
@@ -237,8 +265,25 @@
             this.ctx.stroke();
         }
 
+        /**
+         * Initating method of the Entity
+         * Only Called Once
+         * @method init
+         */
         init() {}
+
+        /**
+         * Update method for calculations that need to be run every frame
+         * @method update
+         */
+        
         update() {}
+
+        /**
+         * Automatically translates and rotates the canvas based on Entity.ang,
+         * Executes the users draw method, then returns the canvas to normal
+         * @method drawEnt
+         */
         drawEnt() {
             /**
              * Rotates the canvas if any rotation (this.ang) is present on the Entity
