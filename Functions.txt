@@ -19,3 +19,22 @@ World (game, width, height)
 
 Ent (game, world, x, y, width, height, physics, mass)
 	applyForce(force) - Applies vector force to entity with physics enabled
+
+ * @property {Element}  STAGE       Canvas Element
+ * @property {Element}  CONTAINER   Div or some other Container placed by the user to contain the STAGE
+ * @property {Context}  CONTEXT     2d Context of the Canvas
+ * @property {Number}   FPS         Animation frames called per second
+ * @property {{}}       keys        Object containing Boolean data of the keyboard
+ * @property {Boolean}  keys.enter  Enter
+ * @property {Boolean}  keys.space  Spacebar
+ * @property {Boolean}  keys.left   Left Arrow
+ * @property {Boolean}  keys.up     Up Arrow
+ * @property {Boolean}  keys.right  Right Arrow
+ * @property {Boolean}  keys.down   Down Arrow
+ * @property {Boolean}  keys.one    Number keys spelled out "one" - "zero"
+ * @property {Boolean}  keys.a      Letter keys "A" - "Z"
+ * @property {{}}       mouse       Object containing positional and Boolean button data of the mouse
+ * @property {Vector}   mouse.pos   A Vector containing the current mouse position inside the canvas
+ * @property {{}}       states      Object containing references to all States
+ * @property {State}    curState    Reference to the currently selected State
+ * @property {Boolean}  debug       Game debug
