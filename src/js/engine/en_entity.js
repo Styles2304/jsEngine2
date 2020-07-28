@@ -29,17 +29,18 @@
                 collideWithWorld: true,
                 onSurface: false,
                 mass: mass,
-                acc: new Vector(), /** Force: Acceleration */
-                vel: new Vector(), /** Force: Velocity */
-                frc: new Vector(), /** Force: Friction */
-                drg: new Vector(), /** Force: Drag */
-                ang: 0, /** Current Angle of Entity */
-                aAcc: 0, /** Force: Angular Acceleration */
-                aVel: 0 /** Force: Angular Velocity */
+                acc: new Vector(), // Force: Acceleration
+                vel: new Vector(), // Force: Velocity
+                frc: new Vector(), // Force: Friction
+                drg: new Vector(), // Force: Drag
+                ang: 0, // Current Angle of Entity
+                aAcc: 0, // Force: Angular Acceleration
+                aVel: 0 // Force: Angular Velocity
             }
             this.bounding = this.boundingUpdate(),
             this.health = { cur: 100, max: 100 }
             this.initialized = false;
+            this.render = true;
 
             if (this.World.physics.enabled) { this.enablePhysics(); }
             this.World.ents.push(this);
@@ -57,16 +58,12 @@
          * @method classUpdate
          */
         classUpdate() {
-        /**
-         * Physics
-         */
+        // Physics
             const _p = this.physics;
             const _wp = this.World.physics;
 
             if (_p.enabled) {
-            /**
-             * Pre-defined forces: Gravity, Friction, Drag
-             */
+            // Pre-defined forces: Gravity, Friction, Drag
                 this.applyForce(Vector.mult(_wp.gravity, _p.mass)); // Gravity ignoring mass
 
                 if (_p.onSurface) { // Only apply friction touching a surface
@@ -87,26 +84,18 @@
                     this.applyForce(_p.drg);
                 }
 
-            /**
-             * Angular Forces
-             */
+            // Angular Forces
                 _p.aVel += _p.aAcc;
                 _p.ang += _p.aVel;
 
-            /**
-             * Acceleration, Velocity, Position / World Position
-             */
+            // Acceleration, Velocity, Position / World Position
                 _p.vel.add(_p.acc);
                 this.pos.add(_p.vel);
 
-            /**
-             * Relative Position Update
-             */
+            // Relative Position Update
                 this.relativePos = Vector.sub(this.pos, this.offset);
 
-            /**
-             * World Collision
-             */
+            // World Collision
                 _p.onSurface = false;
                 
                 if (_p.collideWithWorld) {
@@ -137,9 +126,7 @@
              */
                 this.bounding = this.boundingUpdate();
 
-            /**
-             * Zero out acceleration(s)
-             */
+            // Zero out acceleration(s)
                 _p.acc.mult(0);
                 _p.aAcc = 0;
             }
@@ -148,14 +135,10 @@
          * Non-physics
          */
             if (!_p.enabled) {
-            /**
-             * Relative Position Update
-             */
+            // Relative Position Update
                 this.relativePos = Vector.sub(this.pos, this.offset);
 
-            /**
-             * Bounding Box Update
-             */
+            // Bounding Box Update
                 this.bounding = this.boundingUpdate();
             }
         }
@@ -165,23 +148,20 @@
          * @method debugDraw
          */
         debugDraw() {
-            if (this.Game.debug) {
-                this.ctx.strokeStyle = "#F0F";
-                this.ctx.lineWidth = 2;
-                this.ctx.beginPath();
-                this.ctx.moveTo(this.bounding[0].x, this.bounding[0].y);
-                this.ctx.lineTo(this.bounding[1].x, this.bounding[1].y);
-                this.ctx.lineTo(this.bounding[2].x, this.bounding[2].y);
-                this.ctx.lineTo(this.bounding[3].x, this.bounding[3].y);
-                this.ctx.lineTo(this.bounding[0].x, this.bounding[0].y);
-                this.ctx.stroke();
+        // Bounding Box
+            this.ctx.strokeStyle = "#F0F";
+            this.ctx.lineWidth = 2;
+            this.ctx.beginPath();
+            this.ctx.moveTo(this.bounding[0].x, this.bounding[0].y);
+            this.ctx.lineTo(this.bounding[1].x, this.bounding[1].y);
+            this.ctx.lineTo(this.bounding[2].x, this.bounding[2].y);
+            this.ctx.lineTo(this.bounding[3].x, this.bounding[3].y);
+            this.ctx.lineTo(this.bounding[0].x, this.bounding[0].y);
+            this.ctx.stroke();
 
-            /**
-             * Origin
-             */
-                this.ctx.fillStyle = "#F0F";
-                this.ctx.fillRect(this.pos.x-4, this.pos.y-4, 8, 8);
-            }
+        // Origin
+            this.ctx.fillStyle = "#F0F";
+            this.ctx.fillRect(this.pos.x-4, this.pos.y-4, 8, 8);
         }
 
         /**
@@ -203,7 +183,7 @@
          */
         boundingUpdate() {
             var _x = Math.floor(this.relativePos.x),
-                _y = Math.floor(this.relativePos.y);
+                _y = Math.floor(this.relativePos.y -1);
 
             return [
                 { x: _x, y: _y },
