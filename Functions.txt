@@ -1,9 +1,11 @@
 To Do
 ====================
-- Camera Movement
-- Rotating Bounding Box
+- State variable permanence
+- Cells
+- Angular Forces
+	- Rotating Bounding Box
 
-GAME (canvas, container, width, height, fps, debug)
+GAME (container, width, height, fps, debug)
 	refresh() - clears the canvas
 	addState(name, oneTime, doLoop) - Adds state to the game
 	startState(state) - Starts the state and stops all others
@@ -17,9 +19,29 @@ World (game, width, height)
 	debugDraw() - Draws a red line around the edge of the world for debugging purposes
 	addEnt(name, x, y, width, height, physics) - Adds Entity to the world
 
-Ent (game, world, x, y, width, height, physics, mass)
+Entity (game, world, x, y, width, height, physics, mass)
 	applyForce(force) - Applies vector force to entity with physics enabled
 
+Vector (x, y)
+	Static Functions
+		add(vector1, vector2)
+		sub(vector1, vector2)
+		mult(vector, scalar)
+		div(vector, scalar)
+		copy(vector)
+		
+	add(vector)
+	sub(vector)
+	mult(scalar)
+	div(scalar)
+	norm()
+	getMag()
+	magSq()
+	setMag(magnitude)
+	limit(max)
+	copy()
+
+/**
  * @property {Element}  STAGE       Canvas Element
  * @property {Element}  CONTAINER   Div or some other Container placed by the user to contain the STAGE
  * @property {Context}  CONTEXT     2d Context of the Canvas
@@ -38,3 +60,4 @@ Ent (game, world, x, y, width, height, physics, mass)
  * @property {{}}       states      Object containing references to all States
  * @property {State}    curState    Reference to the currently selected State
  * @property {Boolean}  debug       Game debug
+ */
