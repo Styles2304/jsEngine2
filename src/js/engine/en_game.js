@@ -1,37 +1,15 @@
 /**
  * GAME Class
- * @typedef {{}} Game
+ * @typedef {{}} GAME
  */
     class GAME {
         /**
          * The "Mother Class" that contains all game information
-         *
-         * @constructor
          * @param {String}  container id of the Container Element
          * @param {Number}  width Width of game screen
          * @param {Number}  height Height of game screen
          * @param {Number}  fps Frames per second
          * @param {Boolean} [debug=false] Turn debug on for the entire Game
-         *
-         * @property {Element}  STAGE       Canvas Element
-         * @property {Element}  CONTAINER   Div or some other Container placed by the user to contain the STAGE
-         * @property {Context}  CONTEXT     2d Context of the Canvas
-         * @property {Number}   FPS         Animation frames called per second
-         * @property {{}}       keys        Object containing Boolean data of the keyboard
-         * @property {Boolean}  keys.enter  Enter
-         * @property {Boolean}  keys.space  Spacebar
-         * @property {Boolean}  keys.left   Left Arrow
-         * @property {Boolean}  keys.up     Up Arrow
-         * @property {Boolean}  keys.right  Right Arrow
-         * @property {Boolean}  keys.down   Down Arrow
-         * @property {Boolean}  keys.one    Number keys spelled out "one" - "zero"
-         * @property {Boolean}  keys.a      Letter keys "A" - "Z"
-         * @property {{}}       mouse       Object containing positional and Boolean button data of the mouse
-         * @property {Vector}   mouse.pos   A Vector containing the current mouse position inside the canvas
-         * @property {{}}       states      Object containing references to all States
-         * @property {State}    curState    Reference to the currently selected State
-         * @property {Boolean}  debug       Game debug
-         *
          */
         constructor(container, width, height, fps, debug) {
             this.STAGE = document.createElement("canvas");
@@ -78,7 +56,7 @@
                 z: false
             }
             this.mouse = {
-                pos: new Vect()
+                pos: new Vector()
             }
             this.states = {}
 
@@ -89,7 +67,8 @@
         }
 
         /**
-         * Method to wipe the canvas - called at the beginning of every frame
+         * Wipe the canvas - called at the beginning of every frame
+         * @method refresh
          */
         refresh() { 
             this.CONTEXT.clearRect(
@@ -101,26 +80,27 @@
 
         /**
          * Adds a new state to the GAME
-         * @param {string}  name        Unique name given to the state
-         * @param {[]}      oneTime     Array of functions to only call once
-         * @param {[]}      doLoop      Array of functions to call every frame
+         * @param {String}  name        Unique name given to the state
+         * @param {Array}   oneTime     Array of functions to only call once
+         * @param {Array}   doLoop      Array of functions to call every frame
          */
         addState(name, oneTime, doLoop) { this.states[name] = new State(this, oneTime, doLoop); }
 
         /**
          * Starts the specified State
-         * @param {State}   
+         * @param {State} State The State to start
          */
-        startState(state) {
+        startState(State) {
             if (this.curState !== null) {
                 clearInterval(this.curState.runInterval);
             }
-            this.curState = this.states[state];
+            this.curState = this.states[State];
             this.curState.run();
         }
 
         /**
-         * Method to initiate the game and event listeners
+         * Initiates the game and event listeners
+         * @method run
          */
         run() {
             // Init Message
