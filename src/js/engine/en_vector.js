@@ -89,8 +89,4 @@
         copy() {
             return new Vector(this.x, this.y);
         }
-        
-        static copy(v) {
-            return new Vector(v.x, v.y);
-        }
     }
