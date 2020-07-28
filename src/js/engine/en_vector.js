@@ -3,11 +3,11 @@
  * Vector Class
  * @typedef {{}} Vector
  */
-    class Vect {
+    class Vector {
         /**
          * Custom Vector class
-         * @param {number} x 
-         * @param {number} y 
+         * @param {number} x
+         * @param {number} y
          */
         constructor(x, y) {
             this.x = x || 0;
@@ -20,7 +20,7 @@
         }
 
         static add(v1, v2) {
-            var _v = new Vect();
+            var _v = new Vector();
             _v.x = v1.x + v2.x;
             _v.y = v1.y + v2.y;
             return _v;
@@ -32,7 +32,7 @@
         }
 
         static sub(v1, v2) {
-            var _v = new Vect();
+            var _v = new Vector();
             _v.x = v1.x - v2.x;
             _v.y = v1.y - v2.y;
             return _v;
@@ -44,7 +44,7 @@
         }
 
         static mult(v, scal) {
-            var _v = new Vect();
+            var _v = new Vector();
             _v.x = v.x * scal;
             _v.y = v.y * scal;
             return _v;
@@ -56,7 +56,7 @@
         }
 
         static div(v, scal) {
-            var _v = new Vect();
+            var _v = new Vector();
             _v.x = v.x / scal;
             _v.y = v.y / scal;
             return _v;
@@ -87,10 +87,10 @@
         }
 
         copy() {
-            return new Vect(this.x, this.y);
+            return new Vector(this.x, this.y);
         }
         
         static copy(v) {
-            return new Vect(v.x, v.y);
+            return new Vector(v.x, v.y);
         }
     }
