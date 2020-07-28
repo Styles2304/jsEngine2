@@ -4,8 +4,10 @@ let Boot = Game.states.Boot;
 Boot.start = function() { if (Game.debug) { console.log("Boot State"); } }
 
 Boot.init = function() {
+    console.log(this.curWorld.cells.length);
+
     this.curWorld.enablePhysics();
-    
+
     var _player = new Entity(
         this.Game,
         this.curWorld,
@@ -20,6 +22,8 @@ Boot.init = function() {
         this.offset = _player.center.copy();
     }
     _player.update = function() {}
+
+    var _test = new Cell(this.Game, this.curWorld);
 }
 
 Boot.update = function() {}
