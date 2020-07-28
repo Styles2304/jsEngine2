@@ -6,7 +6,7 @@ Boot.start = function() { if (Game.debug) { console.log("Boot State"); } }
 Boot.init = function() {
     this.curWorld.enablePhysics();
     
-    var _player = new Ent(
+    var _player = new Entity(
         this.Game,
         this.curWorld,
         this.Game.STAGE.width / 2, 50,
