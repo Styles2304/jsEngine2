@@ -78,13 +78,16 @@
                         if (that.doLoop[a] == "draw") {
                             // Add Draw functions
 
-                            if (that.Game.debug) {
-                                that.curWorld.debugDraw();
-                            }
+                            if (that.Game.debug) { that.curWorld.debugDraw(); }
+
+                            that.curWorld.cells.forEach(function(cell) {
+                                if (that.Game.debug) { cell.debugDraw(); }
+                            });
 
                             that.curWorld.ents.forEach(function(ent) {
                                 ent.drawEnt();
-                                ent.debugDraw();
+
+                                if (that.Game.debug) { ent.debugDraw(); }
                             });
                         }
 
