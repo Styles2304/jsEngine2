@@ -65,17 +65,17 @@
         debugDraw() {
             // World
             this.ctx.strokeStyle = "rgb(255,0,0)"; // Red
-            this.ctx.lineWidth = 3;
+            this.ctx.lineWidth = 2;
             this.ctx.strokeRect(1, 1, this.width - 2, this.height - 2);
 
             // Camera
             this.ctx.strokeStyle = "rgb(0,0,255)"; // Blue
             this.ctx.lineWidth = 2;
             this.ctx.strokeRect(
-                this.camera.pos.x + 4,
-                this.camera.pos.y + 4,
-                this.camera.width - 9,
-                this.camera.height - 8
+                this.camera.pos.x + 10,
+                this.camera.pos.y + 10,
+                this.camera.width - 20,
+                this.camera.height - 20
             );
             this.ctx.lineWidth = 1;
         }
@@ -97,5 +97,23 @@
             this.ents.forEach(function(ent) {
                 ent.enablePhysics();
             });
+        }
+
+        /**
+         * Populates the world with cells at the specified width and height
+         * @param {Number} width Width of cells
+         * @param {Number} height Height of cells
+         */
+        addCells(width, height) {
+            var _x = 0,
+                _y = 0,
+                _horCount = Math.ceil(this.width/width),
+                _verCount = Math.ceil(this.height/height);
+
+            for (var a = 0; a < _verCount; a++) {
+                for (var e = 0; e < _horCount; e++) {
+                    this.cells.push(new Cell(this.Game, this, e * width, a * height, width, height));
+                }
+            }
         }
     }
