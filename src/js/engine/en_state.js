@@ -5,10 +5,11 @@
  */
     class State {
         /**
-         * 
-         * @param {{}} Game Reference to the master GAME object
-         * @param {[]} oneTime Array of functions to only call once
-         * @param {[]} doLoop Array of functions to call every frame
+         * A State is a self contained Object with it's own Worlds and Entities that behave differently from each other.
+         * Equivalent to things like the main menu, game play, and pause menu
+         * @param {GAME} Game Reference to the master GAME object
+         * @param {Array} oneTime Array of functions to only call once
+         * @param {Array} doLoop Array of functions to call every frame
          */
         constructor(Game, oneTime, doLoop) {
             this.Game = Game;
@@ -20,7 +21,12 @@
             this.worlds.push(new World(Game, this.Game.STAGE.width, this.Game.STAGE.height));
             this.curWorld = this.worlds[0];
         }
-            
+        
+        /**
+         * Runs the State by calling the necessary functions of itself
+         * and all it's children elements
+         * @method run
+         */
         run() {
             // Pre-Settings
                 let that = this;
@@ -87,5 +93,11 @@
                 }, 1000 / this.Game.FPS);
         }
 
+        /**
+         * Adds a new World space to the current State
+         * @method addWorld
+         * @param {Number} width Width of the new World
+         * @param {Number} height Height of the new World
+         */
         addWorld(width, height) { this.worlds.push(new World(this.Game, width, height)); }
     }
