@@ -7,6 +7,7 @@
         /**
          * Tracks Entities inside it's bounds and determines whether or not
          * they're drawn - my solution for culling
+         * @constructor
          * @param {GAME} Game Reference to the master GAME object
          * @param {World} World Reference to World the Cell belongs to
          * @param {Number} [x] World X Position
@@ -24,6 +25,10 @@
             this.height = height || Game.STAGE.height;
         }
 
+        /**
+         * If (GAME.debug) this method draws the Origin and Boundingbox of the Entity
+         * @method debugDraw
+         */
         debugDraw() {
             this.ctx.strokeStyle="rgb(0,255,0)"; // Green
             this.ctx.lineWidth = 2;
