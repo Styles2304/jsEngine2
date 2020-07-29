@@ -114,7 +114,7 @@
                 "background-color: #000000;"
             );
 
-            // Event listener for mouse
+        // Event listener for mouse
             let that = this; // For reference inside event listeners
 
             this.STAGE.addEventListener('mousemove', function(evt) {
@@ -123,7 +123,7 @@
                 that.mouse.pos.y = evt.clientY - _offset.top;
             });
 
-            // Setup the key listeners for common keys
+        // Setup the key listeners for common keys
             window.onkeydown = function(e) {
                 var key = e.keyCode ? e.keyCode : e.which;
                 switch (key) {
