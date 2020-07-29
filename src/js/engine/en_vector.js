@@ -6,6 +6,7 @@
     class Vector {
         /**
          * Custom Vector class
+         * @constructor
          * @param {number} x
          * @param {number} y
          */
