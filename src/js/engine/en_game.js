@@ -5,6 +5,7 @@
     class GAME {
         /**
          * The "Mother Class" that contains all game information
+         * @constructor
          * @param {String}  container id of the Container Element
          * @param {Number}  width Width of game screen
          * @param {Number}  height Height of game screen
@@ -80,6 +81,7 @@
 
         /**
          * Adds a new state to the GAME
+         * @method addState
          * @param {String}  name        Unique name given to the state
          * @param {Array}   oneTime     Array of functions to only call once
          * @param {Array}   doLoop      Array of functions to call every frame
@@ -88,6 +90,7 @@
 
         /**
          * Starts the specified State
+         * @method startState
          * @param {State} State The State to start
          */
         startState(State) {
