@@ -7,6 +7,7 @@
         /**
          * A State is a self contained Object with it's own Worlds and Entities that behave differently from each other.
          * Equivalent to things like the main menu, game play, and pause menu
+         * @constructor
          * @param {GAME} Game Reference to the master GAME object
          * @param {Array} oneTime Array of functions to only call once
          * @param {Array} doLoop Array of functions to call every frame
