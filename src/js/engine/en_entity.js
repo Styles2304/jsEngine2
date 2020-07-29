@@ -59,6 +59,9 @@
          * @method classUpdate
          */
         classUpdate() {
+        // Cell Management
+            
+
         // Physics
             const _p = this.physics;
             const _wp = this.World.physics;
@@ -145,20 +148,22 @@
          * @method debugDraw
          */
         debugDraw() {
-        // Bounding Box
-            this.ctx.strokeStyle = "#F0F";
-            this.ctx.lineWidth = 2;
-            this.ctx.beginPath();
-            this.ctx.moveTo(this.bounding[0].x, this.bounding[0].y);
-            this.ctx.lineTo(this.bounding[1].x, this.bounding[1].y);
-            this.ctx.lineTo(this.bounding[2].x, this.bounding[2].y);
-            this.ctx.lineTo(this.bounding[3].x, this.bounding[3].y);
-            this.ctx.lineTo(this.bounding[0].x, this.bounding[0].y);
-            this.ctx.stroke();
+            if (this.render) {
+            // Bounding Box
+                this.ctx.strokeStyle = "#F0F";
+                this.ctx.lineWidth = 2;
+                this.ctx.beginPath();
+                this.ctx.moveTo(this.bounding[0].x, this.bounding[0].y);
+                this.ctx.lineTo(this.bounding[1].x, this.bounding[1].y);
+                this.ctx.lineTo(this.bounding[2].x, this.bounding[2].y);
+                this.ctx.lineTo(this.bounding[3].x, this.bounding[3].y);
+                this.ctx.lineTo(this.bounding[0].x, this.bounding[0].y);
+                this.ctx.stroke();
 
-        // Origin
-            this.ctx.fillStyle = "#F0F";
-            this.ctx.fillRect(this.pos.x-4, this.pos.y-4, 8, 8);
+            // Origin
+                this.ctx.fillStyle = "#F0F";
+                this.ctx.fillRect(this.pos.x-4, this.pos.y-4, 8, 8);
+            }
         }
 
         /**
@@ -253,7 +258,6 @@
          * Update method for calculations that need to be run every frame
          * @method update
          */
-        
         update() {}
 
         /**
@@ -262,21 +266,32 @@
          * @method drawEnt
          */
         drawEnt() {
-        // Rotates the canvas if any rotation (this.ang) is present on the Entity
-            if (this.ang != 0) {
-                this.ctx.translate(this.pos.x, this.pos.y);
-                this.ctx.rotate(this.physics.ang * Math.PI / 180);
-                this.ctx.translate(-this.pos.x, -this.pos.y);
-            }
+            if (this.render) {
+            // Rotates the canvas if any rotation (this.ang) is present on the Entity
+                if (this.ang != 0) {
+                    this.ctx.translate(this.pos.x, this.pos.y);
+                    this.ctx.rotate(this.physics.ang * Math.PI / 180);
+                    this.ctx.translate(-this.pos.x, -this.pos.y);
+                }
             
-        // Draws the Entity to the canvas
-            this.draw();
+            // Draws the Entity to the canvas
+                this.draw();
 
-        // Corrects the canvas rotation if necessary
-            if (this.ang != 0) {
-                this.ctx.translate(this.pos.x, this.pos.y);
-                this.ctx.rotate(-this.physics.ang * Math.PI / 180);
-                this.ctx.translate(-this.pos.x, -this.pos.y);
+            // Corrects the canvas rotation if necessary
+                if (this.ang != 0) {
+                    this.ctx.translate(this.pos.x, this.pos.y);
+                    this.ctx.rotate(-this.physics.ang * Math.PI / 180);
+                    this.ctx.translate(-this.pos.x, -this.pos.y);
+                }
             }
+        }
+
+        /**
+         * Determines which cell the entity is in and returns it
+         * @method assignCell
+         * @return Cell
+         */
+        assignCell() {
+            var _that = this;
         }
     }
