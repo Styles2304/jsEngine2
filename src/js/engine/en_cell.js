@@ -34,7 +34,6 @@
             if (this.World.cells.length == 1) {
                 this.ctx.strokeRect(this.x + 1, this.y + 1, this.width - 2, this.height - 2);
             } else {
-                // this.ctx.strokeRect(this.x, this.y, this.width, this.height);
                 this.ctx.beginPath();
 
                 if (this.x == this.World.width - this.width) {
