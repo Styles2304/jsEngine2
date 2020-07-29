@@ -38,7 +38,7 @@
                             if (!that.initialized) {
                                 that[that.oneTime[a]]();
 
-                                // Runs the init functions for any pre-created entities in the current World
+                            // Runs the init functions for any pre-created entities in the current World
                                 Object.keys(that.curWorld.ents).forEach(key => {
                                     let _ent = that.curWorld.ents[key];
                                     if (!_ent.initialized) {
@@ -51,7 +51,7 @@
                                 that.initialized = true;
                             }
                         } else {
-                            // Executes all other "oneTime" 
+                        // Executes all other "oneTime" 
                             that[that.oneTime[a]]();
                         }
                     }
@@ -64,7 +64,7 @@
                     that.Game.refresh();
 
                     for (var a = 0; a < that.doLoop.length; a++) {
-                        // Calls the update functions on children that have it
+                    // Calls the update functions on children that have it
                         if (that.doLoop[a] == "update") {
                             that.curWorld.update();
 
@@ -74,20 +74,20 @@
                             });
                         }
 
-                        // Calls the debugDraw and draw functions on children that have it
+                    // Calls the debugDraw and draw functions on children that have it
                         if (that.doLoop[a] == "draw") {
-                            // World
+                        // World
                             if (that.Game.debug) { that.curWorld.debugDraw(); }
 
-                            // Cells
+                        // Cells
                             that.curWorld.cells.forEach(function(cell) {
                                 if (that.Game.debug) { cell.debugDraw(); }
                             });
 
-                            // Camera
+                        // Camera
                             if (that.Game.debug) { that.curWorld.cameraDebug(); }
 
-                            // Entities
+                        // Entities
                             that.curWorld.ents.forEach(function(ent) {
                                 ent.drawEnt();
                                 if (that.Game.debug) { ent.debugDraw(); }
