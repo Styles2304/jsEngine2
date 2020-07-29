@@ -39,6 +39,8 @@
                 dzX: this.width / 2,
                 dzY: this.height / 2
             }
+
+            this.addCells(this.width, this.height);
         }
 
         /**
@@ -59,16 +61,20 @@
         }
 
         /**
-         * If (GAME.debug) this method draws World and Camera bounds to the canvas
+         * If (GAME.debug) this method draws World and bounds to the canvas
          * @method debugDraw
          */
         debugDraw() {
-            // World
             this.ctx.strokeStyle = "rgb(255,0,0)"; // Red
             this.ctx.lineWidth = 2;
             this.ctx.strokeRect(1, 1, this.width - 2, this.height - 2);
+        }
 
-            // Camera
+        /**
+         * If (GAME.debug) this method draws the Camera bounds to the canvas
+         * @method cameraDebug()
+         */
+        cameraDebug() {
             this.ctx.strokeStyle = "rgb(0,0,255)"; // Blue
             this.ctx.lineWidth = 2;
             this.ctx.strokeRect(
@@ -77,7 +83,6 @@
                 this.camera.width - 20,
                 this.camera.height - 20
             );
-            this.ctx.lineWidth = 1;
         }
 
         /**
@@ -105,10 +110,10 @@
          * @param {Number} height Height of cells
          */
         addCells(width, height) {
-            var _x = 0,
-                _y = 0,
-                _horCount = Math.ceil(this.width/width),
+            var _horCount = Math.ceil(this.width/width),
                 _verCount = Math.ceil(this.height/height);
+
+            this.cells = [];
 
             for (var a = 0; a < _verCount; a++) {
                 for (var e = 0; e < _horCount; e++) {
