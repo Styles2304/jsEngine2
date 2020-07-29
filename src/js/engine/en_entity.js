@@ -6,6 +6,7 @@
     class Entity {
         /**
          * Base Entity class with it's own Init(), Update(), and Draw() functions
+         * @constructor
          * @param {GAME} Game Reference to the master GAME object
          * @param {World} World Reference to World the Entity belongs to
          * @param {Number} x World X Position
@@ -121,9 +122,7 @@
                     }
                 }
 
-            /**
-             * Bounding Box Update
-             */
+            // Bounding Box Update
                 this.bounding = this.boundingUpdate();
 
             // Zero out acceleration(s)
@@ -131,9 +130,7 @@
                 _p.aAcc = 0;
             }
 
-        /**
-         * Non-physics
-         */
+        // Non-physics
             if (!_p.enabled) {
             // Relative Position Update
                 this.relativePos = Vector.sub(this.pos, this.offset);
@@ -265,23 +262,17 @@
          * @method drawEnt
          */
         drawEnt() {
-            /**
-             * Rotates the canvas if any rotation (this.ang) is present on the Entity
-             */
+        // Rotates the canvas if any rotation (this.ang) is present on the Entity
             if (this.ang != 0) {
                 this.ctx.translate(this.pos.x, this.pos.y);
                 this.ctx.rotate(this.physics.ang * Math.PI / 180);
                 this.ctx.translate(-this.pos.x, -this.pos.y);
             }
             
-            /**
-             * Draws the Entity to the canvas
-             */
+        // Draws the Entity to the canvas
             this.draw();
 
-            /**
-             * Corrects the canvas rotation if necessary
-             */
+        // Corrects the canvas rotation if necessary
             if (this.ang != 0) {
                 this.ctx.translate(this.pos.x, this.pos.y);
                 this.ctx.rotate(-this.physics.ang * Math.PI / 180);
