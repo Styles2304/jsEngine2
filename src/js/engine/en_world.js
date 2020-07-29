@@ -7,6 +7,7 @@
         /**
          * A World is a self contained object inside the State. Contains the camera, all Entities, and
          * Cells. Equivalent of different "levels"
+         * @constructor
          * @param {GAME} Game Reference to the master GAME object
          * @param {Number} width Width of the World
          * @param {Number} height Height of the World
@@ -40,7 +41,7 @@
                 dzY: this.height / 2
             }
 
-            this.addCells(this.width, this.height);
+            this.addCells();
         }
 
         /**
@@ -87,6 +88,7 @@
 
         /**
          * Enables physics on the Specified World and all of it's children Elements
+         * @method enablePhysics
          * @param {Vector} gravity 
          * @param {number} friction 
          * @param {number} drag 
@@ -105,20 +107,38 @@
         }
 
         /**
-         * Populates the world with cells at the specified width and height
-         * @param {Number} width Width of cells
-         * @param {Number} height Height of cells
+         * Populates the world with cells based on the STAGE width
+         * @method addCells
          */
-        addCells(width, height) {
-            var _horCount = Math.ceil(this.width/width),
-                _verCount = Math.ceil(this.height/height);
+        addCells() {
+            var _horCount = Math.ceil(this.width/this.Game.STAGE.width),
+                _verCount = Math.ceil(this.height/this.Game.STAGE.height);
 
             this.cells = [];
 
             for (var a = 0; a < _verCount; a++) {
                 for (var e = 0; e < _horCount; e++) {
-                    this.cells.push(new Cell(this.Game, this, e * width, a * height, width, height));
+                    this.cells.push(new Cell(
+                        this.Game,
+                        this,
+                        e * this.Game.STAGE.width,
+                        a * this.Game.STAGE.height,
+                        this.Game.STAGE.width,
+                        this.Game.STAGE.height
+                    ));
                 }
             }
+        }
+
+        /**
+         * Sets the new dimensions of the World and generates cells accordingly
+         * @method setWorld
+         * @param {Number} width Width of the newly defined World
+         * @param {Number} height Height of the newly defined World
+         */
+        setWorld(width, height) {
+            this.width = width;
+            this.height = height;
+            this.addCells();
         }
     }
