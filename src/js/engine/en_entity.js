@@ -8,11 +8,11 @@
          * Base Entity class with it's own Init(), Update(), and Draw() functions
          * @param {GAME} Game Reference to the master GAME object
          * @param {World} World Reference to World the Entity belongs to
-         * @param {Number} x Canvas X Position
-         * @param {Number} y Canvas Y Position
+         * @param {Number} x World X Position
+         * @param {Number} y World Y Position
          * @param {Number} width Width of the Entity
          * @param {Number} height Height of the Entity
-         * @param {Number} mass (Optional) Only useful for Physics
+         * @param {Number} [mass] Only useful for Physics
          */
         constructor(Game, World, x, y, width, height, mass) {
             this.Game = Game;
