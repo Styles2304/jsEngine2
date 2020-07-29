@@ -76,17 +76,20 @@
 
                         // Calls the debugDraw and draw functions on children that have it
                         if (that.doLoop[a] == "draw") {
-                            // Add Draw functions
-
+                            // World
                             if (that.Game.debug) { that.curWorld.debugDraw(); }
 
+                            // Cells
                             that.curWorld.cells.forEach(function(cell) {
                                 if (that.Game.debug) { cell.debugDraw(); }
                             });
 
+                            // Camera
+                            if (that.Game.debug) { that.curWorld.cameraDebug(); }
+
+                            // Entities
                             that.curWorld.ents.forEach(function(ent) {
                                 ent.drawEnt();
-
                                 if (that.Game.debug) { ent.debugDraw(); }
                             });
                         }
