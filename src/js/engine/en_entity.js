@@ -25,6 +25,7 @@
             this.offset = new Vector(0,0);
             this.relativePos = Vector.sub(this.pos, this.offset);
             this.World = World;
+            this.Cell = null;
             this.physics = {
                 enabled: false,
                 collideWithWorld: true,
@@ -48,10 +49,12 @@
         }
 
         /**
-         * Anything that needs to be initiated by the class by default
+         * Anything that needs to be initiated by the Entity by default
          * @method classInit
          */
-        classInit() {}
+        classInit() {
+            this.assignCell();
+        }
 
         /**
          * All Processes that need to be updated by the class by default
@@ -60,7 +63,9 @@
          */
         classUpdate() {
         // Cell Management
-            
+            if (!this.Cell.in(this)) {
+                this.assignCell();
+            }
 
         // Physics
             const _p = this.physics;
@@ -287,11 +292,20 @@
         }
 
         /**
-         * Determines which cell the entity is in and returns it
+         * Determines which cell the entity is in, adds an Entity pointer to that Cell,
+         * and Adds a Cell pointer to the Entity
+         * This is called when initiating an Entity and when the Entity changes cells
          * @method assignCell
-         * @return Cell
          */
         assignCell() {
-            var _that = this;
+            this.World.cells.forEach((cell) => {
+                if (cell.in(this)) {
+                    this.Cell = cell;
+                    this.Cell.ents.push(this);
+                    // console.log("Changing Cells");
+                    // console.log(cell.pos.x);
+                    // console.log(this.World.camera.follow.Cell.pos.x);
+                }
+            });
         }
     }
