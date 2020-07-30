@@ -118,92 +118,90 @@
             );
 
         // Event listener for mouse
-            let that = this; // For reference inside event listeners
-
-            this.STAGE.addEventListener('mousemove', function(evt) {
-                var _offset = this.getBoundingClientRect();
-                that.mouse.pos.x = evt.clientX - _offset.left;
-                that.mouse.pos.y = evt.clientY - _offset.top;
+            this.STAGE.addEventListener('mousemove', (evt) => {
+                var _offset = this.STAGE.getBoundingClientRect();
+                this.mouse.pos.x = evt.clientX - _offset.left;
+                this.mouse.pos.y = evt.clientY - _offset.top;
             });
 
         // Setup the key listeners for common keys
-            window.onkeydown = function(e) {
+            window.onkeydown = (e) => {
                 var key = e.keyCode ? e.keyCode : e.which;
                 switch (key) {
-                    case 13: that.keys.enter = true; e.preventDefault(); break;
-                    case 32: that.keys.space = true; e.preventDefault(); break;
-                    case 37: that.keys.left = true; e.preventDefault(); break;
-                    case 38: that.keys.up = true; e.preventDefault(); break;
-                    case 39: that.keys.right = true; e.preventDefault(); break;
-                    case 40: that.keys.down = true; e.preventDefault(); break;
-                    case 49: that.keys.one = true; e.preventDefault(); break;
-                    case 50: that.keys.two = true; e.preventDefault(); break;
-                    case 65: that.keys.a = true; e.preventDefault(); break;
-                    case 66: that.keys.b = true; e.preventDefault(); break;
-                    case 67: that.keys.c = true; e.preventDefault(); break;
-                    case 68: that.keys.d = true; e.preventDefault(); break;
-                    case 69: that.keys.e = true; e.preventDefault(); break;
-                    case 70: that.keys.f = true; e.preventDefault(); break;
-                    case 71: that.keys.g = true; e.preventDefault(); break;
-                    case 72: that.keys.h = true; e.preventDefault(); break;
-                    case 73: that.keys.i = true; e.preventDefault(); break;
-                    case 74: that.keys.j = true; e.preventDefault(); break;
-                    case 75: that.keys.k = true; e.preventDefault(); break;
-                    case 76: that.keys.l = true; e.preventDefault(); break;
-                    case 77: that.keys.m = true; e.preventDefault(); break;
-                    case 78: that.keys.n = true; e.preventDefault(); break;
-                    case 79: that.keys.o = true; e.preventDefault(); break;
-                    case 80: that.keys.p = true; e.preventDefault(); break;
-                    case 81: that.keys.q = true; e.preventDefault(); break;
-                    case 82: that.keys.r = true; e.preventDefault(); break;
-                    case 83: that.keys.s = true; e.preventDefault(); break;
-                    case 84: that.keys.t = true; e.preventDefault(); break;
-                    case 85: that.keys.u = true; e.preventDefault(); break;
-                    case 86: that.keys.v = true; e.preventDefault(); break;
-                    case 87: that.keys.w = true; e.preventDefault(); break;
-                    case 88: that.keys.x = true; e.preventDefault(); break;
-                    case 89: that.keys.y = true; e.preventDefault(); break;
-                    case 90: that.keys.z = true; e.preventDefault(); break;
+                    case 13: this.keys.enter = true; e.preventDefault(); break;
+                    case 32: this.keys.space = true; e.preventDefault(); break;
+                    case 37: this.keys.left = true; e.preventDefault(); break;
+                    case 38: this.keys.up = true; e.preventDefault(); break;
+                    case 39: this.keys.right = true; e.preventDefault(); break;
+                    case 40: this.keys.down = true; e.preventDefault(); break;
+                    case 49: this.keys.one = true; e.preventDefault(); break;
+                    case 50: this.keys.two = true; e.preventDefault(); break;
+                    case 65: this.keys.a = true; e.preventDefault(); break;
+                    case 66: this.keys.b = true; e.preventDefault(); break;
+                    case 67: this.keys.c = true; e.preventDefault(); break;
+                    case 68: this.keys.d = true; e.preventDefault(); break;
+                    case 69: this.keys.e = true; e.preventDefault(); break;
+                    case 70: this.keys.f = true; e.preventDefault(); break;
+                    case 71: this.keys.g = true; e.preventDefault(); break;
+                    case 72: this.keys.h = true; e.preventDefault(); break;
+                    case 73: this.keys.i = true; e.preventDefault(); break;
+                    case 74: this.keys.j = true; e.preventDefault(); break;
+                    case 75: this.keys.k = true; e.preventDefault(); break;
+                    case 76: this.keys.l = true; e.preventDefault(); break;
+                    case 77: this.keys.m = true; e.preventDefault(); break;
+                    case 78: this.keys.n = true; e.preventDefault(); break;
+                    case 79: this.keys.o = true; e.preventDefault(); break;
+                    case 80: this.keys.p = true; e.preventDefault(); break;
+                    case 81: this.keys.q = true; e.preventDefault(); break;
+                    case 82: this.keys.r = true; e.preventDefault(); break;
+                    case 83: this.keys.s = true; e.preventDefault(); break;
+                    case 84: this.keys.t = true; e.preventDefault(); break;
+                    case 85: this.keys.u = true; e.preventDefault(); break;
+                    case 86: this.keys.v = true; e.preventDefault(); break;
+                    case 87: this.keys.w = true; e.preventDefault(); break;
+                    case 88: this.keys.x = true; e.preventDefault(); break;
+                    case 89: this.keys.y = true; e.preventDefault(); break;
+                    case 90: this.keys.z = true; e.preventDefault(); break;
                 }
             }
 
-            window.onkeyup = function(e) {
+            window.onkeyup = (e) => {
                 var key = e.keyCode ? e.keyCode : e.which;
                 switch (key) {
-                    case 13: that.keys.enter = false; break;
-                    case 32: that.keys.space = false; break;
-                    case 37: that.keys.left = false; break;
-                    case 38: that.keys.up = false; break;
-                    case 39: that.keys.right = false; break;
-                    case 40: that.keys.down = false; break;
-                    case 49: that.keys.one = false; break;
-                    case 50: that.keys.two = false; break;
-                    case 65: that.keys.a = false; break;
-                    case 66: that.keys.b = false; break;
-                    case 67: that.keys.c = false; break;
-                    case 68: that.keys.d = false; break;
-                    case 69: that.keys.e = false; break;
-                    case 70: that.keys.f = false; break;
-                    case 71: that.keys.g = false; break;
-                    case 72: that.keys.h = false; break;
-                    case 73: that.keys.i = false; break;
-                    case 74: that.keys.j = false; break;
-                    case 75: that.keys.k = false; break;
-                    case 76: that.keys.l = false; break;
-                    case 77: that.keys.m = false; break;
-                    case 78: that.keys.n = false; break;
-                    case 79: that.keys.o = false; break;
-                    case 80: that.keys.p = false; break;
-                    case 81: that.keys.q = false; break;
-                    case 82: that.keys.r = false; break;
-                    case 83: that.keys.s = false; break;
-                    case 84: that.keys.t = false; break;
-                    case 85: that.keys.u = false; break;
-                    case 86: that.keys.v = false; break;
-                    case 87: that.keys.w = false; break;
-                    case 88: that.keys.x = false; break;
-                    case 89: that.keys.y = false; break;
-                    case 90: that.keys.z = false; break;
+                    case 13: this.keys.enter = false; break;
+                    case 32: this.keys.space = false; break;
+                    case 37: this.keys.left = false; break;
+                    case 38: this.keys.up = false; break;
+                    case 39: this.keys.right = false; break;
+                    case 40: this.keys.down = false; break;
+                    case 49: this.keys.one = false; break;
+                    case 50: this.keys.two = false; break;
+                    case 65: this.keys.a = false; break;
+                    case 66: this.keys.b = false; break;
+                    case 67: this.keys.c = false; break;
+                    case 68: this.keys.d = false; break;
+                    case 69: this.keys.e = false; break;
+                    case 70: this.keys.f = false; break;
+                    case 71: this.keys.g = false; break;
+                    case 72: this.keys.h = false; break;
+                    case 73: this.keys.i = false; break;
+                    case 74: this.keys.j = false; break;
+                    case 75: this.keys.k = false; break;
+                    case 76: this.keys.l = false; break;
+                    case 77: this.keys.m = false; break;
+                    case 78: this.keys.n = false; break;
+                    case 79: this.keys.o = false; break;
+                    case 80: this.keys.p = false; break;
+                    case 81: this.keys.q = false; break;
+                    case 82: this.keys.r = false; break;
+                    case 83: this.keys.s = false; break;
+                    case 84: this.keys.t = false; break;
+                    case 85: this.keys.u = false; break;
+                    case 86: this.keys.v = false; break;
+                    case 87: this.keys.w = false; break;
+                    case 88: this.keys.x = false; break;
+                    case 89: this.keys.y = false; break;
+                    case 90: this.keys.z = false; break;
                 }
             }
         }
