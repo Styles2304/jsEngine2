@@ -26,6 +26,50 @@
         }
 
         /**
+         * Update Method for the Cell
+         * @method update
+         */
+        update() {
+        // Renders Entitys if Cell is close enough to the World's Camera's followed Entity (player)
+        // Followed Entity's (player's) current Cell
+            let _cell = this.World.camera.follow.Cell.pos,
+                _w = this.width * this.World.cellBuffer,
+                _h = this.height * this.World.cellBuffer,
+                _x = this.pos.x,
+                _y = this.pos.y;
+
+
+
+            // console.log(_cell);
+
+            // [x-w, y-h][  x, y-h][x+w, y-h]
+            // [x-w, y  ][  x, y  ][x+w, y  ]
+            // [x-w, y+h][  x, y+h][x+w, y+h]
+            
+            if (
+                _x == _cell.x - _w && _y == _cell.y - _h ||
+                _x == _cell.x && _y == _cell.y - _h ||
+                _x == _cell.x + _w && _y == _cell.y - _h ||
+
+                _x == _cell.x - _w && _y == _cell.y ||
+                _x == _cell.x && _y == _cell.y ||
+                _x == _cell.x + _w &&  _y == _cell.y ||
+                
+                _x == _cell.x - _w && _y == _cell.y + _h ||
+                _x == _cell.x && _y == _cell.y + _h ||
+                _x == _cell.x + _w &&  _y == _cell.y + _h
+            ) {
+                this.ents.forEach((ent) => {
+                    ent.render = true;
+                });
+            } else {
+                this.ents.forEach((ent) => {
+                    ent.render = false;
+                });
+            }
+        };
+
+        /**
          * If (GAME.debug) this method draws the Origin and Boundingbox of the Entity
          * @method debugDraw
          */
@@ -66,5 +110,19 @@
                 this.ctx.stroke();
             }
             this.ctx.setLineDash([]);
+        }
+
+        /**
+         * Checks whether or the not the Entity is contained within the Cell
+         * @param {Entity} ent
+         * @returns {Boolean} 
+         */
+        in(ent) {
+            return (
+                ent.pos.x > this.pos.x &&
+                ent.pos.x < this.pos.x + this.width &&
+                ent.pos.y > this.pos.y &&
+                ent.pos.y < this.pos.y + this.height
+            );
         }
     }
