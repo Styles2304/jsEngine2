@@ -18,6 +18,7 @@
             this.width = width;
             this.height = height;
             this.cells = [];
+            this.cellBuffer = 1;
             this.ents = [];
             this.collision = Array(
                 new Vector(0, 0),
@@ -49,10 +50,12 @@
          * @method update
          */
         update() {
+            // Moves Camera with the followed Entity (player)
             var _c = this.camera;
             _c.pos.x = (_c.follow.pos.x - _c.width / 2);
             _c.pos.y = (_c.follow.pos.y - _c.height /2);
 
+            // Stops Camera when followed Entity (player) is close to the World boundaries
             if (_c.follow.pos.y > this.height - _c.dzY) { _c.pos.y = this.height - _c.height; }
             if (_c.follow.pos.y < _c.dzY) { _c.pos.y = 0; }
             if (_c.follow.pos.x > this.width - _c.dzX) { _c.pos.x = this.width - _c.width; }
@@ -101,9 +104,7 @@
             this.physics.bounce = bounce || 0.75;
 
             this.physics.enabled = true;
-            this.ents.forEach(function(ent) {
-                ent.enablePhysics();
-            });
+            this.ents.forEach((ent) => { ent.enablePhysics(); });
         }
 
         /**
@@ -140,5 +141,15 @@
             this.width = width;
             this.height = height;
             this.addCells();
+        }
+
+        /**
+         * Sets the number of Cells adjacent to the followed Entity's (player's) Cell that will
+         * render entities
+         * @method setBuffer
+         * @param {Number} buffer
+         */
+        setBuffer(buffer) {
+            this.cellBuffer = buffer;
         }
     }
