@@ -29,75 +29,80 @@
          * @method run
          */
         run() {
-            // Pre-Settings
-                let that = this;
+        // oneTime
+            var _tempInterval = setInterval(() => {
+            for (var a = 0; a < this.oneTime.length; a++) {
+                if (this.oneTime[a] == "init") {
+                    if (!this.initialized) {
+                        this[this.oneTime[a]]();
 
-            // oneTime
-                var _tempInterval = setInterval(function() {
-                    for (var a = 0; a < that.oneTime.length; a++) {
-                        if (that.oneTime[a] == "init") {
-                            if (!that.initialized) {
-                                that[that.oneTime[a]]();
-
-                            // Runs the init functions for any pre-created entities in the current World
-                                Object.keys(that.curWorld.ents).forEach(key => {
-                                    let _ent = that.curWorld.ents[key];
-                                    if (!_ent.initialized) {
-                                        _ent.classInit();
-                                        _ent.init();
-                                        _ent.initialized = true;
-                                    }
-                                });
-
-                                that.initialized = true;
+                    // Runs the init functions for any pre-created entities in the current World
+                        Object.keys(this.curWorld.ents).forEach((key) => {
+                            let _ent = this.curWorld.ents[key];
+                            if (!_ent.initialized) {
+                                _ent.classInit();
+                                _ent.init();
+                                _ent.initialized = true;
                             }
-                        } else {
-                        // Executes all other "oneTime" 
-                            that[that.oneTime[a]]();
-                        }
+                        });
+
+                        this.initialized = true;
+                    }
+                } else {
+                // Executes all other "oneTime" 
+                    this[this.oneTime[a]]();
+                }
+            }
+
+            clearInterval(_tempInterval);
+            });
+
+        // doLoop
+            this.runInterval = setInterval(() => {
+                // console.log(this);
+                this.Game.refresh();
+
+                for (var a = 0; a < this.doLoop.length; a++) {
+                // Calls the update functions on children this have it
+                    if (this.doLoop[a] == "update") {
+                    // Runs update() on the current World
+                        this.curWorld.update();
+
+                    // Runs update() on Cells in current World
+                        this.curWorld.cells.forEach((cell) => {
+                            cell.update();
+                        });
+
+                    // Runs update() on Entitys in the current World
+                        this.curWorld.ents.forEach((ent) => {
+                            ent.classUpdate();
+                            ent.update();
+                        });
                     }
 
-                    clearInterval(_tempInterval);
-                });
+                // Calls the debugDraw and draw functions on children that have it
+                    if (this.doLoop[a] == "draw") {
+                    // World
+                        if (this.Game.debug) { this.curWorld.debugDraw(); }
 
-            // doLoop
-                this.runInterval = setInterval(function() {
-                    that.Game.refresh();
+                    // Cells
+                        this.curWorld.cells.forEach((cell) => {
+                            if (this.Game.debug) { cell.debugDraw(); }
+                        });
 
-                    for (var a = 0; a < that.doLoop.length; a++) {
-                    // Calls the update functions on children that have it
-                        if (that.doLoop[a] == "update") {
-                            that.curWorld.update();
+                    // Camera
+                        if (this.Game.debug) { this.curWorld.cameraDebug(); }
 
-                            that.curWorld.ents.forEach(function(ent) {
-                                ent.classUpdate();
-                                ent.update();
-                            });
-                        }
-
-                    // Calls the debugDraw and draw functions on children that have it
-                        if (that.doLoop[a] == "draw") {
-                        // World
-                            if (that.Game.debug) { that.curWorld.debugDraw(); }
-
-                        // Cells
-                            that.curWorld.cells.forEach(function(cell) {
-                                if (that.Game.debug) { cell.debugDraw(); }
-                            });
-
-                        // Camera
-                            if (that.Game.debug) { that.curWorld.cameraDebug(); }
-
-                        // Entities
-                            that.curWorld.ents.forEach(function(ent) {
-                                ent.drawEnt();
-                                if (that.Game.debug) { ent.debugDraw(); }
-                            });
-                        }
-
-                        that[that.doLoop[a]]();
+                    // Entities
+                        this.curWorld.ents.forEach((ent) => {
+                            ent.drawEnt();
+                            if (this.Game.debug) { ent.debugDraw(); }
+                        });
                     }
-                }, 1000 / this.Game.FPS);
+
+                    this[this.doLoop[a]]();
+                }
+            }, 1000 / this.Game.FPS);
         }
 
         /**
