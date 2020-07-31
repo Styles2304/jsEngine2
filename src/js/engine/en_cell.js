@@ -32,6 +32,7 @@
         update() {
         // Renders Entitys if Cell is close enough to the World's Camera's followed Entity (player)
         // Followed Entity's (player's) current Cell
+            
             let _cell = this.World.camera.follow.Cell.pos,
                 _w = this.width * this.World.cellBuffer,
                 _h = this.height * this.World.cellBuffer,
@@ -115,9 +116,9 @@
          */
         in(ent) {
             return (
-                ent.pos.x > this.pos.x &&
+                ent.pos.x >= this.pos.x &&
                 ent.pos.x < this.pos.x + this.width &&
-                ent.pos.y > this.pos.y &&
+                ent.pos.y >= this.pos.y &&
                 ent.pos.y < this.pos.y + this.height
             );
         }
