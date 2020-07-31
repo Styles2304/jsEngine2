@@ -42,6 +42,7 @@
             this.health = { cur: 100, max: 100 }
             this.initialized = false;
             this.render = true;
+            this.testVal = 0;
 
             if (this.World.physics.enabled) { this.enablePhysics(); }
             this.World.ents.push(this);
@@ -61,8 +62,12 @@
          * @method classUpdate
          */
         classUpdate() {
-        // Cell Management
-            if (!this.Cell.in(this)) {
+         // Cell Management
+            if (!this.Cell.in(this) && !this.assigningCell) {
+            // Removes Entity from leaving Cell
+                this.Cell.ents.splice(this.Cell.ents.indexOf(this), 1);
+
+            // Locates new cell and assigns it accordingly
                 this.assignCell();
             }
 
@@ -262,9 +267,10 @@
         }
 
         /**
-         * Determines which cell the entity is in, adds an Entity pointer to that Cell,
+         * Determines which cell the Entity is in, adds an Entity pointer to that Cell,
          * and Adds a Cell pointer to the Entity
          * This is called when initiating an Entity and when the Entity changes cells
+         * Ultimately this is for culling and faster collision checks
          * @method assignCell
          */
         assignCell() {
@@ -272,9 +278,6 @@
                 if (cell.in(this)) {
                     this.Cell = cell;
                     this.Cell.ents.push(this);
-                    // console.log("Changing Cells");
-                    // console.log(cell.pos.x);
-                    // console.log(this.World.camera.follow.Cell.pos.x);
                 }
             });
         }
