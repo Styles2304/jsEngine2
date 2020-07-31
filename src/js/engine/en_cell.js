@@ -38,10 +38,6 @@
                 _x = this.pos.x,
                 _y = this.pos.y;
 
-
-
-            // console.log(_cell);
-
             // [x-w, y-h][  x, y-h][x+w, y-h]
             // [x-w, y  ][  x, y  ][x+w, y  ]
             // [x-w, y+h][  x, y+h][x+w, y+h]
