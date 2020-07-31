@@ -25,6 +25,9 @@ Boot.init = function() {
     _player.update = function() {
         if (this.Game.keys.left) { this.pos.x -= 10; }
         if (this.Game.keys.right) { this.pos.x += 10; }
+
+    // Relative Position Update to fix above - won't be a problem with applyForce()
+        this.relativePos = Vector.sub(this.pos, this.offset);
     }
 
 
@@ -32,7 +35,7 @@ Boot.init = function() {
     var _testEnt = new Entity(
         this.Game,
         this.curWorld,
-        this.curWorld.width / 2, 50,
+        390, 50,
         50, 50, 10
     );
 
