@@ -16,8 +16,6 @@ Boot.init = function() {
         50,
         10);
 
-    this.curWorld.camera.follow = _player;
-
     _player.init = function() {
         this.offset = _player.center.copy();
     }
@@ -30,14 +28,21 @@ Boot.init = function() {
         this.relativePos = Vector.sub(this.pos, this.offset);
     }
 
+    this.curWorld.camera.follow = _player;
+
 
     // Test Entity
     var _testEnt = new Entity(
         this.Game,
         this.curWorld,
-        390, 50,
+        10, 50,
         50, 50, 10
     );
+
+    // _testEnt.update = function() {
+    //     this.pos.x += 5;
+    //     this.relativePos = Vector.sub(this.pos, this.offset);
+    // }
 
     _testEnt.draw = function() {
         // console.log("drawing");
