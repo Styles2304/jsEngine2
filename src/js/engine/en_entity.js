@@ -39,7 +39,6 @@
                 aAcc: 0, // Force: Angular Acceleration
                 aVel: 0 // Force: Angular Velocity
             }
-            this.bounding = this.boundingUpdate(),
             this.health = { cur: 100, max: 100 }
             this.initialized = false;
             this.render = true;
@@ -130,9 +129,6 @@
                     }
                 }
 
-            // Bounding Box Update
-                this.bounding = this.boundingUpdate();
-
             // Zero out acceleration(s)
                 _p.acc.mult(0);
                 _p.aAcc = 0;
@@ -142,9 +138,6 @@
             if (!_p.enabled) {
             // Relative Position Update
                 this.relativePos = Vector.sub(this.pos, this.offset);
-
-            // Bounding Box Update
-                this.bounding = this.boundingUpdate();
             }
         }
 
@@ -157,13 +150,7 @@
             // Bounding Box
                 this.ctx.strokeStyle = "#F0F";
                 this.ctx.lineWidth = 2;
-                this.ctx.beginPath();
-                this.ctx.moveTo(this.bounding[0].x, this.bounding[0].y);
-                this.ctx.lineTo(this.bounding[1].x, this.bounding[1].y);
-                this.ctx.lineTo(this.bounding[2].x, this.bounding[2].y);
-                this.ctx.lineTo(this.bounding[3].x, this.bounding[3].y);
-                this.ctx.lineTo(this.bounding[0].x, this.bounding[0].y);
-                this.ctx.stroke();
+                this.ctx.strokeRect(this.relativePos.x, this.relativePos.y, this.width, this.height);
 
             // Origin
                 this.ctx.fillStyle = "#F0F";
@@ -184,29 +171,12 @@
         }
 
         /**
-         * Updates the bounding box based on current positioning and rotation
-         * @method boundingUpdate
-         * @returns {array} An array of vectors
-         */
-        boundingUpdate() {
-            var _x = Math.floor(this.relativePos.x),
-                _y = Math.floor(this.relativePos.y -1);
-
-            return [
-                { x: _x, y: _y },
-                { x: _x + this.width, y: _y },
-                { x: _x + this.width, y: _y + this.height },
-                { x: _x, y: _y + this.height }
-            ];
-        }
-
-        /**
          * Enables physics on the Entity. Called by World when physics are enabled
          * @method enablePhysics
          */
         enablePhysics() {
             this.physics.enabled = true;
-        };
+        }
 
         /**
          * Generally overwritten by the user
