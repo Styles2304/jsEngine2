@@ -78,10 +78,7 @@
                             ent.classUpdate();
                             ent.update();
                         });
-                    }
-
-                // Calls the debugDraw and draw functions on children that have it
-                    if (this.doLoop[a] == "draw") {
+                    } else if (this.doLoop[a] == "draw") { // Calls the debugDraw and draw functions on children that have it
                     // World
                         if (this.Game.debug) { this.curWorld.debugDraw(); }
 
@@ -98,9 +95,9 @@
                             ent.drawEnt();
                             if (this.Game.debug) { ent.debugDraw(); }
                         });
+                    } else {
+                        this[this.doLoop[a]]();
                     }
-
-                    this[this.doLoop[a]]();
                 }
             }, 1000 / this.Game.FPS);
         }
