@@ -27,24 +27,32 @@
             this.World = World;
             this.Cell = null;
             this.physics = {
-                enabled: false,
-                collideWithWorld: true,
-                onSurface: false,
-                mass: mass,
+                enabled: false, // Physics toggle for Entity
+                collideWithWorld: true, // Collide with world bounds - not that useful for how much work I'm putting into it.
+                advancedCollision: true,    // Rotates bounding box with Entity and has different collision calculations based on
+                                            // the 4 corners of the defined bounding box
+                bounding: [], // Bounding Box for Advanced Collision
+                simpleBounding: {                                               // Bounding box for simple collisions
+                    pos: { x: 0, y: 0 },    // pos is an offset
+                    width: this.width,
+                    height: this.height
+                },
+                onSurface: false, // Touching a surface
+                mass: mass, // Mass of Entity
                 acc: new Vector(), // Force: Acceleration
                 vel: new Vector(), // Force: Velocity
                 frc: new Vector(), // Force: Friction
                 drg: new Vector(), // Force: Drag
                 ang: 0, // Current Angle of Entity
+                rads: 0, // Current radsians of Entity
                 aAcc: 0, // Force: Angular Acceleration
                 aVel: 0 // Force: Angular Velocity
             }
             this.health = { cur: 100, max: 100 }
             this.initialized = false;
             this.render = true;
-            this.testVal = 0;
 
-            if (this.World.physics.enabled) { this.enablePhysics(); }
+            if (this.World.physics.enabled) { this.physics.enabled = true; }
             this.World.ents.push(this);
         }
 
@@ -74,27 +82,40 @@
         // Physics
             const _p = this.physics;
             const _wp = this.World.physics;
-
             if (_p.enabled) {
+            // Convert Angle to radsians
+                _p.rads = (_p.ang) * Math.PI / 180;
+
             // Pre-defined forces: Gravity, Friction, Drag
                 this.applyForce(Vector.mult(_wp.gravity, _p.mass)); // Gravity ignoring mass
 
                 if (_p.onSurface) { // Only apply friction touching a surface
+                // Applies Linear Friction
                     _p.frc = _p.vel.copy();
                     _p.frc.setMag(-_wp.friction);
                     this.applyForce(_p.frc);
                     
+                // Applies Angular Friction
                     if (_p.aVel > 0) {
                         _p.aAcc -= _p.frc.getMag();
                     }
-
                     if (_p.aVel < 0) {
                         _p.aAcc += _p.frc.getMag();
                     }
                 } else { // Applies drag when in the air
+                // Applies Linear Drag
                     _p.drg = _p.vel.copy();
                     _p.drg.mult(-_wp.drag * (_p.vel.magSq()));
                     this.applyForce(_p.drg);
+
+                // Applies Angular Drag
+                    if (_p.aVel > 0) {
+                        _p.drg = (_p.aVel * _p.aVel) * -_wp.drag;
+                    }
+                    if (_p.aVel < 0) {
+                        _p.drg = (_p.aVel * _p.aVel) * _wp.drag;
+                    }
+                    this.applyAngForce(_p.drg);
                 }
 
             // Angular Forces
@@ -108,35 +129,107 @@
             // Relative Position Update
                 this.relativePos = Vector.sub(this.pos, this.offset);
 
+            // Bounding Box Update
+                if (_p.advancedCollision) {
+                    this.physics.bounding[0] = Vector.rot(Vector.add(this.relativePos, new Vector(0, 0)), _p.rads, this.pos);
+                    this.physics.bounding[2] = Vector.rot(Vector.add(this.relativePos, new Vector(this.width, this.height)), _p.rads, this.pos);
+                    this.physics.bounding[1] = Vector.rot(Vector.add(this.relativePos, new Vector(this.width, 0)), _p.rads, this.pos);
+                    this.physics.bounding[3] = Vector.rot(Vector.add(this.relativePos, new Vector(0, this.height )), _p.rads, this.pos);
+                }
+
             // World Collision
                 _p.onSurface = false;
                 
                 if (_p.collideWithWorld) {
-                    if (this.relativePos.y < 0) { // Top
-                        this.pos.y = 0 + this.offset.y;
-                        _p.vel.y *= -_wp.bounce;
-                    }
+                    if (_p.advancedCollision) {
+                    // Top Bounds
+                        if (
+                            _p.bounding[0].y < 0 || _p.bounding[1].y < 0 ||
+                            _p.bounding[2].y < 0 || _p.bounding[3].y < 0
+                        ) {
+                            if (_p.bounding[0].y < 0) { this.pos.y -= _p.bounding[0].y; }
+                            if (_p.bounding[1].y < 0) { this.pos.y -= _p.bounding[1].y; }
+                            if (_p.bounding[2].y < 0) { this.pos.y -= _p.bounding[2].y; }
+                            if (_p.bounding[3].y < 0) { this.pos.y -= _p.bounding[3].y; }
 
-                    if (this.relativePos.y + this.height> this.World.height) { // Bottom
-                        this.pos.y = this.World.height - (this.height - this.offset.y);
-                        _p.vel.y *= -_wp.bounce;
-                        _p.onSurface = true;
-                    }
+                            _p.vel.y *= -_wp.bounce;
+                        }
+                    // Bottom Bounds
+                        if (
+                            _p.bounding[0].y > this.World.height || _p.bounding[1].y > this.World.height ||
+                            _p.bounding[2].y > this.World.height || _p.bounding[3].y > this.World.height
+                        ) {
+                            if (_p.bounding[0].y > this.World.height) { this.pos.y -= _p.bounding[0].y - this.World.height; }
+                            if (_p.bounding[1].y > this.World.height) { this.pos.y -= _p.bounding[1].y - this.World.height; }
+                            if (_p.bounding[2].y > this.World.height) { this.pos.y -= _p.bounding[2].y - this.World.height; }
+                            if (_p.bounding[3].y > this.World.height) { this.pos.y -= _p.bounding[3].y - this.World.height; }
 
-                    if (this.relativePos.x < 0) { // Left
-                        this.pos.x = 0 + this.offset.x;
-                        _p.vel.x *= -_wp.bounce;
-                    }
-                    
-                    if (this.relativePos.x + this.width > this.World.width) { // Right
-                        this.pos.x = this.World.width - (this.width - this.offset.x);
-                        _p.vel.x *= -_wp.bounce;
+                            _p.vel.y *= -_wp.bounce;
+                            _p.onSurface = true;
+                        }
+                    // Left Bounds
+                        if (
+                            _p.bounding[0].x < 0 || _p.bounding[1].x < 0 ||
+                            _p.bounding[2].x < 0 || _p.bounding[3].x < 0
+                        ) {
+                            if (_p.bounding[0].x < 0) { this.pos.x -= _p.bounding[0].x; }
+                            if (_p.bounding[1].x < 0) { this.pos.x -= _p.bounding[1].x; }
+                            if (_p.bounding[2].x < 0) { this.pos.x -= _p.bounding[2].x; }
+                            if (_p.bounding[3].x < 0) { this.pos.x -= _p.bounding[3].x; }
+
+                            _p.vel.x *= -_wp.bounce;
+                        }
+                    // Right Bounds
+                        if (
+                            _p.bounding[0].x > this.World.width || _p.bounding[1].x > this.World.width ||
+                            _p.bounding[2].x > this.World.width || _p.bounding[3].x > this.World.width
+                        ) {
+                            if (_p.bounding[0].x > this.World.width) { this.pos.x -= _p.bounding[0].x - this.World.width; }
+                            if (_p.bounding[1].x > this.World.width) { this.pos.x -= _p.bounding[1].x - this.World.width; }
+                            if (_p.bounding[2].x > this.World.width) { this.pos.x -= _p.bounding[2].x - this.World.width; }
+                            if (_p.bounding[3].x > this.World.width) { this.pos.x -= _p.bounding[3].x - this.World.width; }
+
+                            _p.vel.x *= -_wp.bounce;
+                        }
+                    } else {
+                    // Top Bounds
+                        if (this.relativePos.y + _p.simpleBounding.pos.y < 0) {
+                            this.pos.y = this.offset.y - _p.simpleBounding.pos.y;
+                            _p.vel.y *= -_wp.bounce;
+                        }
+
+                    // Bottom Bounds
+                        if (this.relativePos.y + _p.simpleBounding.pos.y + _p.simpleBounding.height > this.World.height) {
+                            this.pos.y = this.World.height - this.offset.y + (this.height - (_p.simpleBounding.pos.y + _p.simpleBounding.height));
+                            _p.vel.y *= -_wp.bounce;
+                            _p.onSurface = true;
+                        }
+                    // Left Bounds
+                        if (this.relativePos.x + _p.simpleBounding.pos.x < 0) {
+                            this.pos.x = this.offset.x - _p.simpleBounding.pos.x;
+                            _p.vel.x *= -_wp.bounce;
+                        }
+
+                    // Right Bounds
+                        if (this.relativePos.x + _p.simpleBounding.pos.x + _p.simpleBounding.width > this.World.width) {
+                            this.pos.x = this.World.width - this.offset.x + (this.width - (_p.simpleBounding.pos.y + _p.simpleBounding.width));
+                            _p.vel.x *= -_wp.bounce;
+                        }
                     }
                 }
 
             // Zero out acceleration(s)
                 _p.acc.mult(0);
                 _p.aAcc = 0;
+
+            // Zero out very small angular velocities
+                if (Math.abs(_p.aVel) < 0.099) { _p.aVel = 0; }
+
+            // Calls the player defined update() 
+                this.update();
+
+            // End of update Relative Position Update
+                this.relativePos = Vector.sub(this.pos, this.offset);
             }
 
         // Non-physics
@@ -147,41 +240,91 @@
         }
 
         /**
+         * Automatically translates and rotates the canvas based on Entity.ang,
+         * Executes the users draw method, then returns the canvas to normal
+         * @method classDraw
+         */
+        classDraw() {
+            if (this.render) {
+            // Rotates the canvas if any rotation (this.ang) is present on the Entity
+                if (this.ang != 0) {
+                    this.ctx.translate(this.pos.x, this.pos.y);
+                    this.ctx.rotate(this.physics.rads);
+                    this.ctx.translate(-this.pos.x, -this.pos.y);
+                }
+            
+            // Calls the player defined draw() class
+                this.draw();
+
+            // If Game.debug draws the origin and bounding box of the Entity
+                if (this.Game.debug) { this.debugDraw(); }
+
+            // Corrects the canvas rotation if necessary
+                if (this.ang != 0) {
+                    this.ctx.translate(this.pos.x, this.pos.y);
+                    this.ctx.rotate(-this.physics.rads);
+                    this.ctx.translate(-this.pos.x, -this.pos.y);
+                }
+            }
+        }
+
+        /**
          * If (GAME.debug) this method draws the Origin and Boundingbox of the Entity
          * @method debugDraw
          */
         debugDraw() {
-            if (this.render) {
             // Bounding Box
                 this.ctx.strokeStyle = "#F0F";
                 this.ctx.lineWidth = 2;
-                this.ctx.strokeRect(this.relativePos.x, this.relativePos.y, this.width, this.height);
 
+            // Un-does any rotation that may be present so the bounding box is accurately represented
+                if (this.physics.ang != 0) {
+                    this.ctx.translate(this.pos.x, this.pos.y);
+                    this.ctx.rotate(-this.physics.rads);
+                    this.ctx.translate(-this.pos.x, -this.pos.y);
+                }
+
+                if (this.physics.advancedCollision) {
+                // Advanced Collision Box drawing from bounding coordinates
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(this.physics.bounding[0].x, this.physics.bounding[0].y);
+                    this.ctx.lineTo(this.physics.bounding[1].x, this.physics.bounding[1].y);
+                    this.ctx.lineTo(this.physics.bounding[2].x, this.physics.bounding[2].y);
+                    this.ctx.lineTo(this.physics.bounding[3].x, this.physics.bounding[3].y);
+                    this.ctx.lineTo(this.physics.bounding[0].x, this.physics.bounding[0].y);
+                    this.ctx.stroke();
+                } else {
+                // Simple Collision Box
+                    this.ctx.strokeRect(
+                        this.relativePos.x + this.physics.simpleBounding.pos.x, this.relativePos.y + this.physics.simpleBounding.pos.y,
+                        this.physics.simpleBounding.width, this.physics.simpleBounding.height
+                    );
+                }
+
+            // Re-Applies any rotation that may be present
+                if (this.physics.ang != 0) {
+                    this.ctx.translate(this.pos.x, this.pos.y);
+                    this.ctx.rotate(this.physics.rads);
+                    this.ctx.translate(-this.pos.x, -this.pos.y);
+                }
+    
             // Origin
                 this.ctx.fillStyle = "#F0F";
                 this.ctx.fillRect(this.pos.x-4, this.pos.y-4, 8, 8);
             }
-        }
 
         /**
-         * Applies forces to an Entity in a physics enabled World
-         * @method applyForce
-         * @param {Vector} force
+         * Initating method of the Entity
+         * Only Called Once
+         * @method init
          */
-        applyForce(force) {
-            if (!isNaN(force.x)) {
-                var _f = Vector.div(force, this.physics.mass);
-                this.physics.acc.add(_f);
-            }
-        }
+        init() {}
 
         /**
-         * Enables physics on the Entity. Called by World when physics are enabled
-         * @method enablePhysics
+         * Update method for calculations that need to be run every frame
+         * @method update
          */
-        enablePhysics() {
-            this.physics.enabled = true;
-        }
+        update() {}
 
         /**
          * Generally overwritten by the user
@@ -217,53 +360,9 @@
             this.ctx.strokeStyle="#000";
             this.ctx.lineWidth = 1;
             this.ctx.beginPath();
-            this.ctx.arc(
-                _x,
-                _y + this.height / 16,
-                _r / 2,
-                0,
-                Math.PI
-            );
+            this.ctx.moveTo(_x - this.width / 4, _y + this.height / 5);
+            this.ctx.lineTo(_x + this.width / 4, _y + this.height / 5);
             this.ctx.stroke();
-        }
-
-        /**
-         * Initating method of the Entity
-         * Only Called Once
-         * @method init
-         */
-        init() {}
-
-        /**
-         * Update method for calculations that need to be run every frame
-         * @method update
-         */
-        update() {}
-
-        /**
-         * Automatically translates and rotates the canvas based on Entity.ang,
-         * Executes the users draw method, then returns the canvas to normal
-         * @method drawEnt
-         */
-        drawEnt() {
-            if (this.render) {
-            // Rotates the canvas if any rotation (this.ang) is present on the Entity
-                if (this.ang != 0) {
-                    this.ctx.translate(this.pos.x, this.pos.y);
-                    this.ctx.rotate(this.physics.ang * Math.PI / 180);
-                    this.ctx.translate(-this.pos.x, -this.pos.y);
-                }
-            
-            // Draws the Entity to the canvas
-                this.draw();
-
-            // Corrects the canvas rotation if necessary
-                if (this.ang != 0) {
-                    this.ctx.translate(this.pos.x, this.pos.y);
-                    this.ctx.rotate(-this.physics.ang * Math.PI / 180);
-                    this.ctx.translate(-this.pos.x, -this.pos.y);
-                }
-            }
         }
 
         /**
@@ -280,5 +379,46 @@
                     this.Cell.ents.push(this);
                 }
             });
+        }
+
+        /**
+         * Applies force/mass to an Entity in a physics enabled World
+         * @method applyForce
+         * @param {Vector} force
+         */
+        applyForce(force) {
+            if (!isNaN(force.x)) {
+                var _f = Vector.div(force, this.physics.mass);
+                this.physics.acc.add(_f);
+            }
+        }
+
+        /**
+         * Applies an angular force/mass to rotate the Entity
+         * === DO NOT USE WITH LINEAR GRAVITY ===
+         * @method applyAngForce
+         * @param {Number} force
+         */
+        applyAngForce(force) {
+            if (!isNaN(force)) {
+                this.physics.aVel += (force / this.physics.mass);
+            }
+        }
+
+        /**
+         * Sets the simple collision bounding box relative to the parent Entity
+         * @method simpleBounding
+         * @param {Number} x X Position from the top-left corner of the Entity
+         * @param {Number} y Y Position from the top-left corner of the Entity
+         * @param {Number} width
+         * @param {Number} height
+         */
+        simpleBounding(x, y, width, height) {
+            this.physics.simpleBounding.pos = {
+                x: x,
+                y: y
+            }
+            this.physics.simpleBounding.width = width;
+            this.physics.simpleBounding.height = height;
         }
     }
