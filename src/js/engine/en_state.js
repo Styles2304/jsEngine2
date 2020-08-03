@@ -76,7 +76,6 @@
                     // Runs update() on Entitys in the current World
                         this.curWorld.ents.forEach((ent) => {
                             ent.classUpdate();
-                            ent.update();
                         });
                     } else if (this.doLoop[a] == "draw") { // Calls the debugDraw and draw functions on children that have it
                     // World
@@ -92,8 +91,7 @@
 
                     // Entities
                         this.curWorld.ents.forEach((ent) => {
-                            ent.drawEnt();
-                            if (this.Game.debug) { ent.debugDraw(); }
+                            ent.classDraw();
                         });
                     } else {
                         this[this.doLoop[a]]();
