@@ -1,9 +1,6 @@
 To Do
 ====================
-- State variable permanence
-- Cells
 - Angular Forces
-	- Rotating Bounding Box
 
 GAME (container, width, height, fps, debug)
 	refresh() - clears the canvas
