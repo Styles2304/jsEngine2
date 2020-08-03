@@ -22,6 +22,7 @@
             this.FPS = fps;
             this.keys = {
                 enter: false,
+                lshift: false,
                 space: false,
                 left: false,
                 up: false,
@@ -129,6 +130,7 @@
                 var key = e.keyCode ? e.keyCode : e.which;
                 switch (key) {
                     case 13: this.keys.enter = true; e.preventDefault(); break;
+                    case 16: this.keys.lshift = true; e.preventDefault(); break;
                     case 32: this.keys.space = true; e.preventDefault(); break;
                     case 37: this.keys.left = true; e.preventDefault(); break;
                     case 38: this.keys.up = true; e.preventDefault(); break;
@@ -169,6 +171,7 @@
                 var key = e.keyCode ? e.keyCode : e.which;
                 switch (key) {
                     case 13: this.keys.enter = false; break;
+                    case 16: this.keys.lshift = false; break;
                     case 32: this.keys.space = false; break;
                     case 37: this.keys.left = false; break;
                     case 38: this.keys.up = false; break;
