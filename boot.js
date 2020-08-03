@@ -4,49 +4,37 @@ let Boot = Game.states.Boot;
 Boot.start = function() { if (Game.debug) { console.log("Boot State"); } }
 
 Boot.init = function() {
-    this.curWorld.setWorld(2000, 400);
-    this.curWorld.enablePhysics();
+    this.curWorld.setWorld(400, 400);
+    this.curWorld.enablePhysics(new Vector(0,0), null, null, 0.75);
 
     // Player
     var _player = new Entity(
         this.Game,
         this.curWorld,
-        this.curWorld.width / 2, 50,
+        this.curWorld.width - 50, this.curWorld.height - 50,
         50,
         50,
         10);
 
     _player.init = function() {
-        this.offset = _player.center.copy();
+        this.offset = this.center.copy();
+        this.physics.advancedCollision = true;
+        this.physics.ang = 0;
+        // this.simpleBounding(10, 10, this.width - 20, this.height - 20);
     }
 
     _player.update = function() {
-        if (this.Game.keys.left) { this.pos.x -= 10; }
-        if (this.Game.keys.right) { this.pos.x += 10; }
+        if (this.Game.keys.d) { this.physics.ang += 2; }
+        if (this.Game.keys.a) { this.physics.ang -= 2; }
+        if (this.Game.keys.down) { this.applyForce(new Vector(0, 3)); }
+        if (this.Game.keys.up) { this.applyForce(new Vector(0, -3)); }
+        if (this.Game.keys.left) { this.applyForce(new Vector(-3, 0)); }
+        if (this.Game.keys.right) { this.applyForce(new Vector(3, 0)); }
 
-    // Relative Position Update to fix above - won't be a problem with applyForce()
-        this.relativePos = Vector.sub(this.pos, this.offset);
+        if (this.physics.onSurface) { this.physics.vel.y = 0; }
     }
 
     this.curWorld.camera.follow = _player;
-
-
-    // Test Entity
-    var _testEnt = new Entity(
-        this.Game,
-        this.curWorld,
-        10, 50,
-        50, 50, 10
-    );
-
-    // _testEnt.update = function() {
-    //     this.pos.x += 5;
-    //     this.relativePos = Vector.sub(this.pos, this.offset);
-    // }
-
-    _testEnt.draw = function() {
-        // console.log("drawing");
-    }
 }
 
 Boot.update = function() {}
