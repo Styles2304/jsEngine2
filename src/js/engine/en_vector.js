@@ -21,10 +21,10 @@
         }
 
         static add(v1, v2) {
-            var _v = new Vector();
-            _v.x = v1.x + v2.x;
-            _v.y = v1.y + v2.y;
-            return _v;
+            let _rV = new Vector();
+            _rV.x = v1.x + v2.x;
+            _rV.y = v1.y + v2.y;
+            return _rV;
         }
 
         sub(v) {
@@ -33,10 +33,10 @@
         }
 
         static sub(v1, v2) {
-            var _v = new Vector();
-            _v.x = v1.x - v2.x;
-            _v.y = v1.y - v2.y;
-            return _v;
+            let _rV = new Vector();
+            _rV.x = v1.x - v2.x;
+            _rV.y = v1.y - v2.y;
+            return _rV;
         }
 
         mult(scal) {
@@ -45,10 +45,10 @@
         }
 
         static mult(v, scal) {
-            var _v = new Vector();
-            _v.x = v.x * scal;
-            _v.y = v.y * scal;
-            return _v;
+            let _rV = new Vector();
+            _rV.x = v.x * scal;
+            _rV.y = v.y * scal;
+            return _rV;
         }
 
         div(scal) {
@@ -57,10 +57,10 @@
         }
 
         static div(v, scal) {
-            var _v = new Vector();
-            _v.x = v.x / scal;
-            _v.y = v.y / scal;
-            return _v;
+            let _rV = new Vector();
+            _rV.x = v.x / scal;
+            _rV.y = v.y / scal;
+            return _rV;
         }
 
         norm() {
@@ -89,5 +89,19 @@
 
         copy() {
             return new Vector(this.x, this.y);
+        }
+
+        rot(angle) {
+            this.x = this.x * Math.cos(angle) - this.y * Math.sin(angle);
+            this.y = this.y * Math.cos(angle) + this.x * Math.sin(angle);
+        }
+
+        static rot(v, angle, pos) {
+            let _rV = new Vector();
+            v = Vector.sub(v, pos);
+            _rV.x = v.x * Math.cos(angle) - v.y * Math.sin(angle);
+            _rV.y = v.y * Math.cos(angle) + v.x * Math.sin(angle);
+            _rV = Vector.add(_rV, pos);
+            return _rV;
         }
     }
