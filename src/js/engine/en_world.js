@@ -28,10 +28,10 @@
             );
             this.physics = {
                 enabled: false,
-                gravity: new Vector(0, 3),
-                friction: 1,
-                drag: 0.0001,
-                bounce: 0.75
+                gravity: new Vector(),
+                friction: 0,
+                drag: 0,
+                bounce: 0
             };
             this.camera = {
                 follow: null,
@@ -46,7 +46,7 @@
         }
 
         /**
-         * Runs calculations on the World and all of it's children Elements
+         * Runs calculations on the World and handes the camera dead zone
          * @method update
          */
         update() {
@@ -92,19 +92,19 @@
         /**
          * Enables physics on the Specified World and all of it's children Elements
          * @method enablePhysics
-         * @param {Vector} gravity 
-         * @param {number} friction 
-         * @param {number} drag 
-         * @param {number} bounce 
+         * @param {Vector} gravity
+         * @param {Number} friction
+         * @param {Number} drag
+         * @param {Number} bounce
          */
         enablePhysics(gravity, friction, drag, bounce) {
-            this.physics.gravity = gravity || new Vector(0,3);
-            this.physics.friction = friction || 1;
-            this.physics.drag = drag || 0.0001;
-            this.physics.bounce = bounce || 0.75;
+            if (gravity == null) { this.physics.gravity = new Vector(0,3); } else { this.physics.gravity = gravity; }
+            if (friction == null) { this.physics.friction = 1; } else { this.physics.friction = friction; }
+            if (drag == null) { this.physics.drag = 0.0001; } else { this.physics.drag = drag; }
+            if (bounce == null) { this.physics.bounce = 0.75; } else { this.physics.bounce = bounce; }
 
             this.physics.enabled = true;
-            this.ents.forEach((ent) => { ent.enablePhysics(); });
+            this.ents.forEach((ent) => { ent.physics.enabled = true });
         }
 
         /**
