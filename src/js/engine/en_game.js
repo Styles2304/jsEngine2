@@ -63,7 +63,7 @@
             this.states = {}
 
             this.curState = null;
-            this.debug = debug || false;
+            if (typeof debug === 'undefined') { this.debug = false; } else { this.debug = debug; }
 
             this.run();
         }
@@ -208,4 +208,14 @@
                 }
             }
         }
+
+        /**
+         * Convert Angle into Radians
+         * @method radians
+         * @param {Number} angle
+         * @returns Radians
+         */
+        radians(angle) {
+            return angle * Math.PI / 180;
+        };
     }
