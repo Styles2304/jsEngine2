@@ -11,8 +11,8 @@
          * @param {number} y
          */
         constructor(x, y) {
-            this.x = x || 0;
-            this.y = y || 0;
+            if (typeof x === 'undefined') { this.x = 0; } else { this.x = x; }
+            if (typeof y === 'undefined') { this.y = 0; } else { this.y = y; }
         }
 
         add(v) {
@@ -103,5 +103,10 @@
             _rV.y = v.y * Math.cos(angle) + v.x * Math.sin(angle);
             _rV = Vector.add(_rV, pos);
             return _rV;
+        }
+
+        fromAngle(angle, length) {
+            if (typeof length === 'undefined') { length = 1; }
+            return new Vector(length * Math.cos(angle), length * Math.sin(angle));
         }
     }
