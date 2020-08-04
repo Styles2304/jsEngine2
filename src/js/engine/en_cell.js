@@ -10,18 +10,18 @@
          * @constructor
          * @param {GAME} Game Reference to the master GAME object
          * @param {World} World Reference to World the Cell belongs to
-         * @param {Number} [x] World X Position
-         * @param {Number} [y] World Y Position
-         * @param {Number} [width] Width of Cell
-         * @param {Number} [height] Height of Cell
+         * @param {Number} x World X Position
+         * @param {Number} y World Y Position
+         * @param {Number} width Width of Cell
+         * @param {Number} height Height of Cell
          */
         constructor(Game, World, x, y, width, height) {
             this.Game = Game;
             this.ctx = Game.CONTEXT;
             this.World = World;
-            this.pos = new Vector(x || 0, y || 0);
-            this.width = width || Game.STAGE.width;
-            this.height = height || Game.STAGE.height;
+            this.pos = new Vector(x, y);
+            this.width = width;
+            this.height = height;
             this.ents = [];
         }
 
