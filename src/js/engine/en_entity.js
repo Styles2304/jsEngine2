@@ -11,16 +11,16 @@
          * @param {World} World Reference to World the Entity belongs to
          * @param {Number} x World X Position
          * @param {Number} y World Y Position
-         * @param {Number} width Width of the Entity
-         * @param {Number} height Height of the Entity
-         * @param {Number} [mass] Only useful for Physics
+         * @param {Number} [width=0] Width of the Entity
+         * @param {Number} [height=0] Height of the Entity
+         * @param {Number} [mass=0] Only useful for Physics
          */
         constructor(Game, World, x, y, width, height, mass) {
             this.Game = Game;
             this.ctx = Game.CONTEXT;
             this.pos = new Vector(x, y);
-            this.width = width || 0;
-            this.height = height || 0;
+            if (typeof width === 'undefined') { this.width = 0; } else { this.width = width; }
+            if (typeof height === 'undefined') { this.height = 0; } else { this.height = height; }
             this.center = new Vector(Math.floor(this.width / 2), Math.floor(this.height / 2));
             this.offset = new Vector(0,0);
             this.relativePos = Vector.sub(this.pos, this.offset);
@@ -38,16 +38,16 @@
                     height: this.height
                 },
                 onSurface: false, // Touching a surface
-                mass: mass, // Mass of Entity
+                mass: null, // Mass of Entity
                 acc: new Vector(), // Force: Acceleration
                 vel: new Vector(), // Force: Velocity
                 frc: new Vector(), // Force: Friction
                 drg: new Vector(), // Force: Drag
                 ang: 0, // Current Angle of Entity
-                rads: 0, // Current radsians of Entity
                 aAcc: 0, // Force: Angular Acceleration
                 aVel: 0 // Force: Angular Velocity
             }
+            if (typeof mass === 'undefined') { this.physics.mass = 0; } else { this.physics.mass = mass; }
             this.health = { cur: 100, max: 100 }
             this.initialized = false;
             this.render = true;
@@ -83,8 +83,6 @@
             const _p = this.physics;
             const _wp = this.World.physics;
             if (_p.enabled) {
-            // Convert Angle to radsians
-                _p.rads = (_p.ang) * Math.PI / 180;
 
             // Pre-defined forces: Gravity, Friction, Drag
                 this.applyForce(Vector.mult(_wp.gravity, _p.mass)); // Gravity ignoring mass
@@ -131,10 +129,10 @@
 
             // Bounding Box Update
                 if (_p.advancedCollision) {
-                    this.physics.bounding[0] = Vector.rot(Vector.add(this.relativePos, new Vector(0, 0)), _p.rads, this.pos);
-                    this.physics.bounding[2] = Vector.rot(Vector.add(this.relativePos, new Vector(this.width, this.height)), _p.rads, this.pos);
-                    this.physics.bounding[1] = Vector.rot(Vector.add(this.relativePos, new Vector(this.width, 0)), _p.rads, this.pos);
-                    this.physics.bounding[3] = Vector.rot(Vector.add(this.relativePos, new Vector(0, this.height )), _p.rads, this.pos);
+                    this.physics.bounding[0] = Vector.rot(Vector.add(this.relativePos, new Vector(0, 0)), this.Game.radians(_p.ang), this.pos);
+                    this.physics.bounding[2] = Vector.rot(Vector.add(this.relativePos, new Vector(this.width, this.height)), this.Game.radians(_p.ang), this.pos);
+                    this.physics.bounding[1] = Vector.rot(Vector.add(this.relativePos, new Vector(this.width, 0)), this.Game.radians(_p.ang), this.pos);
+                    this.physics.bounding[3] = Vector.rot(Vector.add(this.relativePos, new Vector(0, this.height )), this.Game.radians(_p.ang), this.pos);
                 }
 
             // World Collision
@@ -212,7 +210,7 @@
 
                     // Right Bounds
                         if (this.relativePos.x + _p.simpleBounding.pos.x + _p.simpleBounding.width > this.World.width) {
-                            this.pos.x = this.World.width - this.offset.x + (this.width - (_p.simpleBounding.pos.y + _p.simpleBounding.width));
+                            this.pos.x = this.World.width - this.offset.x + (this.width - (_p.simpleBounding.pos.x + _p.simpleBounding.width));
                             _p.vel.x *= -_wp.bounce;
                         }
                     }
@@ -249,7 +247,7 @@
             // Rotates the canvas if any rotation (this.ang) is present on the Entity
                 if (this.ang != 0) {
                     this.ctx.translate(this.pos.x, this.pos.y);
-                    this.ctx.rotate(this.physics.rads);
+                    this.ctx.rotate(this.Game.radians(this.physics.ang));
                     this.ctx.translate(-this.pos.x, -this.pos.y);
                 }
             
@@ -262,7 +260,7 @@
             // Corrects the canvas rotation if necessary
                 if (this.ang != 0) {
                     this.ctx.translate(this.pos.x, this.pos.y);
-                    this.ctx.rotate(-this.physics.rads);
+                    this.ctx.rotate(-this.Game.radians(this.physics.ang));
                     this.ctx.translate(-this.pos.x, -this.pos.y);
                 }
             }
@@ -280,7 +278,7 @@
             // Un-does any rotation that may be present so the bounding box is accurately represented
                 if (this.physics.ang != 0) {
                     this.ctx.translate(this.pos.x, this.pos.y);
-                    this.ctx.rotate(-this.physics.rads);
+                    this.ctx.rotate(-this.Game.radians(this.physics.ang));
                     this.ctx.translate(-this.pos.x, -this.pos.y);
                 }
 
@@ -304,7 +302,7 @@
             // Re-Applies any rotation that may be present
                 if (this.physics.ang != 0) {
                     this.ctx.translate(this.pos.x, this.pos.y);
-                    this.ctx.rotate(this.physics.rads);
+                    this.ctx.rotate(this.Game.radians(this.physics.ang));
                     this.ctx.translate(-this.pos.x, -this.pos.y);
                 }
     
