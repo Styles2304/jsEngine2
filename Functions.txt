@@ -1,6 +1,7 @@
 To Do
 ====================
-- Angular Forces
+- Kill small velocities
+- Define advanced bounding box
 
 GAME (container, width, height, fps, debug)
 	refresh() - clears the canvas
