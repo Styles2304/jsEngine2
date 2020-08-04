@@ -18,20 +18,30 @@ Boot.init = function() {
 
     _player.init = function() {
         this.offset = this.center.copy();
-        this.physics.advancedCollision = true;
+        this.physics.advancedCollision = false;
         this.physics.ang = 0;
-        // this.simpleBounding(10, 10, this.width - 20, this.height - 20);
+    }
+
+    _player.draw = function() {
+        this.ctx.fillStyle = "#FF0"; // Yellow
+        this.ctx.fillRect(this.relativePos.x, this.relativePos.y, this.width, this.height);
+        this.ctx.lineWidth = 3;
+        this.ctx.strokeStyle = "#F00"; // Red
+        this.ctx.beginPath();
+        this.ctx.moveTo(this.pos.x, this.pos.y);
+        this.ctx.lineTo(this.pos.x, this.pos.y - 50);
+        this.ctx.stroke();
     }
 
     _player.update = function() {
-        if (this.Game.keys.d) { this.physics.ang += 2; }
-        if (this.Game.keys.a) { this.physics.ang -= 2; }
+        if (this.Game.keys.d) { this.physics.ang += 3; }
+        if (this.Game.keys.a) { this.physics.ang -= 3; }
         if (this.Game.keys.down) { this.applyForce(new Vector(0, 3)); }
         if (this.Game.keys.up) { this.applyForce(new Vector(0, -3)); }
         if (this.Game.keys.left) { this.applyForce(new Vector(-3, 0)); }
         if (this.Game.keys.right) { this.applyForce(new Vector(3, 0)); }
 
-        if (this.physics.onSurface) { this.physics.vel.y = 0; }
+        if (this.Game.keys.w) { this.applyForce(this.pos.fromAngle(this.Game.radians(this.physics.ang - 90))) }
     }
 
     this.curWorld.camera.follow = _player;
