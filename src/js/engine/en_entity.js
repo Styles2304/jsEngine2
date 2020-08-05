@@ -27,25 +27,25 @@
             this.World = World;
             this.Cell = null;
             this.physics = {
-                enabled: false, // Physics toggle for Entity
-                collideWithWorld: true, // Collide with world bounds - not that useful for how much work I'm putting into it.
+                enabled: false,             // Physics toggle for Entity
+                collideWithWorld: true,     // Collide with world bounds - not that useful for how much work I'm putting into it.
                 advancedCollision: true,    // Rotates bounding box with Entity and has different collision calculations based on
                                             // the 4 corners of the defined bounding box
-                bounding: [], // Bounding Box for Advanced Collision
-                simpleBounding: {                                               // Bounding box for simple collisions
+                bounding: [],               // Bounding Box for Advanced Collision
+                simpleBounding: {           // Bounding box for simple collisions
                     pos: { x: 0, y: 0 },    // pos is an offset
                     width: this.width,
                     height: this.height
                 },
-                onSurface: false, // Touching a surface
-                mass: null, // Mass of Entity
-                acc: new Vector(), // Force: Acceleration
-                vel: new Vector(), // Force: Velocity
-                frc: new Vector(), // Force: Friction
-                drg: new Vector(), // Force: Drag
-                ang: 0, // Current Angle of Entity
-                aAcc: 0, // Force: Angular Acceleration
-                aVel: 0 // Force: Angular Velocity
+                onSurface: false,           // Touching a surface
+                mass: null,                 // Mass of Entity
+                acc: new Vector(),          // Force: Acceleration
+                vel: new Vector(),          // Force: Velocity
+                frc: new Vector(),          // Force: Friction
+                drg: new Vector(),          // Force: Drag
+                ang: 0,                     // Current Angle of Entity
+                aAcc: 0,                    // Force: Angular Acceleration
+                aVel: 0                     // Force: Angular Velocity
             }
             if (typeof mass === 'undefined') { this.physics.mass = 0; } else { this.physics.mass = mass; }
             this.health = { cur: 100, max: 100 }
