@@ -16,10 +16,13 @@
             this.STAGE = document.createElement("canvas");
             this.STAGE.width = width;
             this.STAGE.height = height;
+            this.STAGE.center = new Vector(width/2, height/2);
             this.CONTAINER = document.getElementById(container);
                 this.CONTAINER.appendChild(this.STAGE); // Adds the canvas to the container
             this.CONTEXT = this.STAGE.getContext("2d");
             this.FPS = fps;
+            this.images = {};   // Stores all the loaded spritesheets or, hopefully, the one atlas.
+                                // Pretty sure the implementation will change as I get more familiar
             this.keys = {
                 enter: false,
                 lshift: false,
@@ -210,7 +213,7 @@
         }
 
         /**
-         * Convert Angle into Radians
+         * Converts Angle into Radians
          * @method radians
          * @param {Number} angle
          * @returns Radians
@@ -218,4 +221,29 @@
         radians(angle) {
             return angle * Math.PI / 180;
         };
+
+        /**
+         * Pre-loads all images asynchronously in supplied array
+         * @method loadImages
+         * @async
+         * @param {Array} arr Array of image paths
+         * @param {Function} callback Executed when all images are loaded
+         */
+        async loadImages(arr, callback) {
+            var images = 0;
+
+            for (var a = 0; a < arr.length; a++) {
+                var img = new Image();
+                img.onload = imageLoaded;
+                img.src = arr[a];
+                this.images[arr[a]] = img;
+            }
+
+            function imageLoaded(evt) {
+                images++;
+                if (images >= arr.length) {
+                    callback;
+                }
+            }
+        }
     }
