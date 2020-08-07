@@ -33,7 +33,8 @@
             var _tempInterval = setInterval(() => {
             for (var a = 0; a < this.oneTime.length; a++) {
                 if (this.oneTime[a] == "init") {
-                    if (!this.initialized) {
+                    if (!this.initialized) { // Runs inits for state and all children if not already initialized
+                    // Runs init on self
                         this[this.oneTime[a]]();
 
                     // Runs the init functions for any pre-created entities in the current World
@@ -49,7 +50,7 @@
                         this.initialized = true;
                     }
                 } else {
-                // Executes all other "oneTime" 
+                // Executes all other "oneTime"
                     this[this.oneTime[a]]();
                 }
             }
@@ -59,12 +60,14 @@
 
         // doLoop
             this.runInterval = setInterval(() => {
-                // console.log(this);
                 this.Game.refresh();
 
                 for (var a = 0; a < this.doLoop.length; a++) {
-                // Calls the update functions on children this have it
+                // Calls the update functions on children that have it
                     if (this.doLoop[a] == "update") {
+                    // Runs update() on self
+                        this.update();
+
                     // Runs update() on the current World
                         this.curWorld.update();
 
@@ -78,6 +81,9 @@
                             ent.classUpdate();
                         });
                     } else if (this.doLoop[a] == "draw") { // Calls the debugDraw and draw functions on children that have it
+                    // State
+                        this.draw();
+                        
                     // World
                         if (this.Game.debug) { this.curWorld.debugDraw(); }
 
@@ -94,6 +100,7 @@
                             ent.classDraw();
                         });
                     } else {
+                        // Executes all other "oneTime"
                         this[this.doLoop[a]]();
                     }
                 }
