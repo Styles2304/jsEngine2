@@ -327,6 +327,8 @@
         /**
          * Generally overwritten by the user
          * This draws the default sprite for the Entity
+         * ... But maybe not? I might replace the ability to overwrite draw with
+         * control over animations (idle, run, etc)
          * @method draw
          */
         draw() {
