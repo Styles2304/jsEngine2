@@ -32,37 +32,38 @@
         update() {
         // Renders Entitys if Cell is close enough to the World's Camera's followed Entity (player)
         // Followed Entity's (player's) current Cell
-            
-            let _cell = this.World.camera.follow.Cell.pos,
-                _w = this.width * this.World.cellBuffer,
-                _h = this.height * this.World.cellBuffer,
-                _x = this.pos.x,
-                _y = this.pos.y;
+            if (this.World.camera.follow === 'undefined') { 
+                let _cell = this.World.camera.follow.Cell.pos,
+                    _w = this.width * this.World.cellBuffer,
+                    _h = this.height * this.World.cellBuffer,
+                    _x = this.pos.x,
+                    _y = this.pos.y;
 
-            // [x-w, y-h][  x, y-h][x+w, y-h]
-            // [x-w, y  ][  x, y  ][x+w, y  ]
-            // [x-w, y+h][  x, y+h][x+w, y+h]
-            
-            if (
-                _x == _cell.x - _w && _y == _cell.y - _h ||
-                _x == _cell.x && _y == _cell.y - _h ||
-                _x == _cell.x + _w && _y == _cell.y - _h ||
-
-                _x == _cell.x - _w && _y == _cell.y ||
-                _x == _cell.x && _y == _cell.y ||
-                _x == _cell.x + _w &&  _y == _cell.y ||
+                // [x-w, y-h][  x, y-h][x+w, y-h]
+                // [x-w, y  ][  x, y  ][x+w, y  ]
+                // [x-w, y+h][  x, y+h][x+w, y+h]
                 
-                _x == _cell.x - _w && _y == _cell.y + _h ||
-                _x == _cell.x && _y == _cell.y + _h ||
-                _x == _cell.x + _w &&  _y == _cell.y + _h
-            ) {
-                this.ents.forEach((ent) => {
-                    ent.render = true;
-                });
-            } else {
-                this.ents.forEach((ent) => {
-                    ent.render = false;
-                });
+                if (
+                    _x == _cell.x - _w && _y == _cell.y - _h ||
+                    _x == _cell.x && _y == _cell.y - _h ||
+                    _x == _cell.x + _w && _y == _cell.y - _h ||
+
+                    _x == _cell.x - _w && _y == _cell.y ||
+                    _x == _cell.x && _y == _cell.y ||
+                    _x == _cell.x + _w &&  _y == _cell.y ||
+                    
+                    _x == _cell.x - _w && _y == _cell.y + _h ||
+                    _x == _cell.x && _y == _cell.y + _h ||
+                    _x == _cell.x + _w &&  _y == _cell.y + _h
+                ) {
+                    this.ents.forEach((ent) => {
+                        ent.render = true;
+                    });
+                } else {
+                    this.ents.forEach((ent) => {
+                        ent.render = false;
+                    });
+                }
             }
         };
 
