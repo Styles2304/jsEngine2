@@ -51,17 +51,19 @@
          */
         update() {
             // Moves Camera with the followed Entity (player)
-            var _c = this.camera;
-            _c.pos.x = (_c.follow.pos.x - _c.width / 2);
-            _c.pos.y = (_c.follow.pos.y - _c.height /2);
+            if (this.camera.follow === 'undefined') {
+                var _c = this.camera;
+                _c.pos.x = (_c.follow.pos.x - _c.width / 2);
+                _c.pos.y = (_c.follow.pos.y - _c.height /2);
 
-            // Stops Camera when followed Entity (player) is close to the World boundaries
-            if (_c.follow.pos.y > this.height - _c.dzY) { _c.pos.y = this.height - _c.height; }
-            if (_c.follow.pos.y < _c.dzY) { _c.pos.y = 0; }
-            if (_c.follow.pos.x > this.width - _c.dzX) { _c.pos.x = this.width - _c.width; }
-            if (_c.follow.pos.x < _c.dzX) { _c.pos.x = 0; }
+                // Stops Camera when followed Entity (player) is close to the World boundaries
+                if (_c.follow.pos.y > this.height - _c.dzY) { _c.pos.y = this.height - _c.height; }
+                if (_c.follow.pos.y < _c.dzY) { _c.pos.y = 0; }
+                if (_c.follow.pos.x > this.width - _c.dzX) { _c.pos.x = this.width - _c.width; }
+                if (_c.follow.pos.x < _c.dzX) { _c.pos.x = 0; }
 
-            this.ctx.setTransform(1,0,0,1, -_c.pos.x, -_c.pos.y);
+                this.ctx.setTransform(1,0,0,1, -_c.pos.x, -_c.pos.y);
+            }
         }
 
         /**
