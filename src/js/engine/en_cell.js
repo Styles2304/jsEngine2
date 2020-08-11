@@ -23,25 +23,37 @@
             this.width = width;
             this.height = height;
             this.ents = [];
+            this.map = null;
+            this.render = true;
+
+            if (this.World.map !== null) {
+                let si = this.pos.x + (this.pos.y * this.width), // Starting Index
+                    ei = si + (this.width * this.height) / (this.World.map.tileWidth * this.World.map.tileHeight); // Ending Index
+
+                this.map = new WorldMap(
+                    this.ctx,
+                    this,
+                    this.World.map.src,
+                    this.World.map.tileWidth,
+                    this.World.map.tileHeight,
+                    this.World.map.data.slice(si,ei)
+                );
+            }
         }
 
         /**
          * Update Method for the Cell
+         * Draws Entities and Map if cell is close enough to the Camera's followed Entity
          * @method update
          */
         update() {
-        // Renders Entitys if Cell is close enough to the World's Camera's followed Entity (player)
         // Followed Entity's (player's) current Cell
-            if (this.World.camera.follow === 'undefined') { 
+            if (this.World.camera.follow !== null) {
                 let _cell = this.World.camera.follow.Cell.pos,
                     _w = this.width * this.World.cellBuffer,
                     _h = this.height * this.World.cellBuffer,
                     _x = this.pos.x,
                     _y = this.pos.y;
-
-                // [x-w, y-h][  x, y-h][x+w, y-h]
-                // [x-w, y  ][  x, y  ][x+w, y  ]
-                // [x-w, y+h][  x, y+h][x+w, y+h]
                 
                 if (
                     _x == _cell.x - _w && _y == _cell.y - _h ||
@@ -56,16 +68,28 @@
                     _x == _cell.x && _y == _cell.y + _h ||
                     _x == _cell.x + _w &&  _y == _cell.y + _h
                 ) {
+                    this.render = true;
                     this.ents.forEach((ent) => {
                         ent.render = true;
                     });
                 } else {
+                    this.render = false;
                     this.ents.forEach((ent) => {
                         ent.render = false;
                     });
                 }
             }
         };
+
+        /**
+         * Draw function for the cell - primarily to draw the map
+         * @method draw
+         */
+        draw() {
+            if (this.render && this.map !== null) {
+                this.map.draw();
+            }
+        }
 
         /**
          * If (GAME.debug) this method draws the Origin and Boundingbox of the Entity
