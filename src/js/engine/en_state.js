@@ -34,19 +34,18 @@
             for (var a = 0; a < this.oneTime.length; a++) {
                 if (this.oneTime[a] == "init") {
                     if (!this.initialized) { // Runs inits for state and all children if not already initialized
-                    // Runs init on self
+                    // State
                         this[this.oneTime[a]]();
 
-                    // Runs the init functions for any pre-created entities in the current World
+                    // Entities
                         Object.keys(this.curWorld.ents).forEach((key) => {
                             let _ent = this.curWorld.ents[key];
                             if (!_ent.initialized) {
                                 _ent.classInit();
-                                _ent.init();
-                                _ent.initialized = true;
                             }
                         });
 
+                    // Sets state to initialized
                         this.initialized = true;
                     }
                 } else {
@@ -60,23 +59,23 @@
 
         // doLoop
             this.runInterval = setInterval(() => {
-                this.Game.refresh();
+                this.Game.refresh(); // Clears the canvas
 
                 for (var a = 0; a < this.doLoop.length; a++) {
                 // Calls the update functions on children that have it
                     if (this.doLoop[a] == "update") {
-                    // Runs update() on self
+                    // State
                         this.update();
 
-                    // Runs update() on the current World
+                    // World
                         this.curWorld.update();
 
-                    // Runs update() on Cells in current World
+                    // Cells
                         this.curWorld.cells.forEach((cell) => {
                             cell.update();
                         });
 
-                    // Runs update() on Entitys in the current World
+                    // Entity
                         this.curWorld.ents.forEach((ent) => {
                             ent.classUpdate();
                         });
@@ -89,6 +88,7 @@
 
                     // Cells
                         this.curWorld.cells.forEach((cell) => {
+                            cell.draw();
                             if (this.Game.debug) { cell.debugDraw(); }
                         });
 
