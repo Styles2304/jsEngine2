@@ -226,7 +226,7 @@
          * Pre-loads all images asynchronously in supplied array
          * @method loadImages
          * @async
-         * @param {Array} arr Array of image paths
+         * @param {Array} arr Array of image data - each an array with path, width, and height
          * @param {Function} callback Executed when all images are loaded
          */
         async loadImages(arr, callback) {
@@ -235,11 +235,13 @@
             for (var a = 0; a < arr.length; a++) {
                 var img = new Image();
                 img.onload = imageLoaded;
-                img.src = arr[a];
-                this.images[arr[a]] = img;
+                img.src = arr[a][0];
+                img.width = arr[a][2];
+                img.height = arr[a][3];
+                this.images[arr[a][1]] = img;
             }
 
-            function imageLoaded(evt) {
+            function imageLoaded() {
                 images++;
                 if (images >= arr.length) {
                     callback;
