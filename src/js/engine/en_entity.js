@@ -2,6 +2,9 @@
 /**
  * Entity Class
  * @typedef {{}} Entity
+ * 
+ * TO-DO:
+ *  - Collision with tilemap
  */
     class Entity {
         /**
@@ -26,6 +29,9 @@
             this.relativePos = Vector.sub(this.pos, this.offset);
             this.World = World;
             this.Cell = null;
+            this.animations = {};
+            this.animation = null;
+            this.spriteSheet = null;
             this.physics = {
                 enabled: false,             // Physics toggle for Entity
                 collideWithWorld: true,     // Collide with world bounds - not that useful for how much work I'm putting into it.
@@ -62,6 +68,8 @@
          */
         classInit() {
             this.assignCell();
+            this.init();
+            this.initialized = true;
         }
 
         /**
@@ -216,25 +224,33 @@
                     }
                 }
 
+            // Map Collision
+                if (_p.advancedCollision) {} else {
+                    // Bottom Bounds
+
+                    // if (this.Cell.map.data[])
+
+                    // if (this.relativePos.y + _p.simpleBounding.pos.y + _p.simpleBounding.height > this.World.height) {
+                    //     this.pos.y = this.World.height - this.offset.y + (this.height - (_p.simpleBounding.pos.y + _p.simpleBounding.height));
+                    //     _p.vel.y *= -_wp.bounce;
+                    //     _p.onSurface = true;
+                    // }
+                }
+
             // Zero out acceleration(s)
                 _p.acc.mult(0);
                 _p.aAcc = 0;
 
             // Zero out very small angular velocities
                 if (Math.abs(_p.aVel) < 0.099) { _p.aVel = 0; }
+            }
+
 
             // Calls the player defined update() 
-                this.update();
+            this.update();
 
             // End of update Relative Position Update
                 this.relativePos = Vector.sub(this.pos, this.offset);
-            }
-
-        // Non-physics
-            if (!_p.enabled) {
-            // Relative Position Update
-                this.relativePos = Vector.sub(this.pos, this.offset);
-            }
         }
 
         /**
@@ -312,60 +328,6 @@
             }
 
         /**
-         * Initating method of the Entity
-         * Only Called Once
-         * @method init
-         */
-        init() {}
-
-        /**
-         * Update method for calculations that need to be run every frame
-         * @method update
-         */
-        update() {}
-
-        /**
-         * Generally overwritten by the user
-         * This draws the default sprite for the Entity
-         * ... But maybe not? I might replace the ability to overwrite draw with
-         * control over animations (idle, run, etc)
-         * @method draw
-         */
-        draw() {
-            var _r = this.width/2,
-                _x = this.pos.x + (this.center.x - this.offset.x),
-                _y = this.pos.y + (this.center.y - this.offset.y);
-            this.ctx.fillStyle="#FF0";
-            this.ctx.beginPath();      
-            this.ctx.arc(
-                _x,
-                _y,
-                _r,
-                0,
-                2 * Math.PI);
-            this.ctx.fill();
-            this.ctx.fillStyle="#000";
-            this.ctx.fillRect(
-                (_x - this.width / 5) - (Math.sqrt(_r)) / 2,
-                _y - this.height / 6,
-                Math.sqrt(_r),
-                Math.sqrt(_r)
-            );
-            this.ctx.fillRect(
-                (_x + this.width / 5) - (Math.sqrt(_r)) / 2,
-                _y - this.height / 6,
-                Math.sqrt(_r),
-                Math.sqrt(_r)
-            );
-            this.ctx.strokeStyle="#000";
-            this.ctx.lineWidth = 1;
-            this.ctx.beginPath();
-            this.ctx.moveTo(_x - this.width / 4, _y + this.height / 5);
-            this.ctx.lineTo(_x + this.width / 4, _y + this.height / 5);
-            this.ctx.stroke();
-        }
-
-        /**
          * Determines which cell the Entity is in, adds an Entity pointer to that Cell,
          * and Adds a Cell pointer to the Entity
          * This is called when initiating an Entity and when the Entity changes cells
@@ -420,5 +382,118 @@
             }
             this.physics.simpleBounding.width = width;
             this.physics.simpleBounding.height = height;
+        }
+
+        /**
+         * Sets the Entity's spritesheet
+         * @method
+         * @param {String} src Path to image source and name of pre-loaded image
+         */
+        setSpriteSheet(src) {
+            this.spriteSheet = Game.images[src];
+        };
+        
+        /**
+         * Adds an animation to the entity
+         * @method addAnimation
+         * @param {String} name Name of the animation to add
+         * @param {Number} duration Length of time to get through the entire animation in ms
+         * @param {Boolean} [flipped=false] Optional toggle to flip animation. If true, image is draw mirrored
+         * @param {Array} [frames=[]] Optional array of frames to be added at animation creation
+         */
+        addAnimation(name, duration, flipped, frames) {
+            var _duration,
+                _flipped,
+                _frames = [];
+
+            if (typeof duration === 'undefined') { _duration = 1; } else { _duration = duration; }
+            if (typeof flipped === 'undefined') { _flipped = false; } else { _flipped = flipped; }
+            if (typeof frames !== 'undefined') {
+            // Converts provided array of frames and frame data to objects to be added to the animation
+                for (var a = 0; a < frames.length; a++) {
+                    _frames.push({
+                        x: frames[a][0],
+                        y: frames[a][1],
+                        w: frames[a][2],
+                        h: frames[a][3],
+                        start: frames[a][4],
+                        end: frames[a][5]
+                    });
+                }
+            }
+
+            this.animations[name] = new Anim(
+                this.ctx,
+                this,
+                name,
+                this.spriteSheet,
+                _duration,
+                _flipped,
+                _frames
+            );
+        }
+
+        /**
+         * Calls animation and sets the currentAnimation
+         * @method playAnimation
+         * @param {Anim} name 
+         */
+        playAnimation(name) {
+            this.animations[name].play();
+            this.currentAnimation = name;
+        }
+
+        /**
+         * Initating method of the Entity
+         * Only Called Once
+         * @method init
+         */
+        init() {}
+
+        /**
+         * Update method for calculations that need to be run every frame
+         * @method update
+         */
+        update() {}
+
+        /**
+         * Generally overwritten by the user
+         * This draws the default sprite for the Entity
+         * ... But maybe not? I might replace the ability to overwrite draw with
+         * control over animations (idle, run, etc)
+         * @method draw
+         */
+        draw() { // Delete all when dev is done
+            var _r = this.width/2,
+                _x = this.pos.x + (this.center.x - this.offset.x),
+                _y = this.pos.y + (this.center.y - this.offset.y);
+            this.ctx.fillStyle="#FF0";
+            this.ctx.beginPath();      
+            this.ctx.arc(
+                _x,
+                _y,
+                _r,
+                0,
+                2 * Math.PI);
+            this.ctx.fill();
+            this.ctx.fillStyle="#000";
+            this.ctx.fillRect(
+                (_x - this.width / 5) - (Math.sqrt(_r)) / 2,
+                _y - this.height / 6,
+                Math.sqrt(_r),
+                Math.sqrt(_r)
+            );
+            this.ctx.fillRect(
+                (_x + this.width / 5) - (Math.sqrt(_r)) / 2,
+                _y - this.height / 6,
+                Math.sqrt(_r),
+                Math.sqrt(_r)
+            );
+            this.ctx.strokeStyle="#000";
+            this.ctx.lineWidth = 1;
+            this.ctx.beginPath();
+            this.ctx.moveTo(_x - this.width / 4, _y + this.height / 5);
+            this.ctx.lineTo(_x + this.width / 4, _y + this.height / 5);
+            this.ctx.stroke();
         }
     }
