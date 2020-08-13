@@ -25,10 +25,12 @@
             if (typeof width === 'undefined') { this.width = 0; } else { this.width = width; }
             if (typeof height === 'undefined') { this.height = 0; } else { this.height = height; }
             this.center = new Vector(Math.floor(this.width / 2), Math.floor(this.height / 2));
-            this.offset = new Vector(0,0);
+            this.offset = new Vector();
             this.relativePos = Vector.sub(this.pos, this.offset);
             this.World = World;
             this.Cell = null;
+            this.cellMapPos = new Vector();
+            this.mapIndex = null;
             this.animations = {};
             this.animation = null;
             this.spriteSheet = null;
@@ -90,6 +92,7 @@
         // Physics
             const _p = this.physics;
             const _wp = this.World.physics;
+            
             if (_p.enabled) {
 
             // Pre-defined forces: Gravity, Friction, Drag
@@ -143,9 +146,10 @@
                     this.physics.bounding[3] = Vector.rot(Vector.add(this.relativePos, new Vector(0, this.height )), this.Game.radians(_p.ang), this.pos);
                 }
 
-            // World Collision
+            // Collision In General
                 _p.onSurface = false;
                 
+            // World Bounds Collision
                 if (_p.collideWithWorld) {
                     if (_p.advancedCollision) {
                     // Top Bounds
@@ -227,8 +231,9 @@
             // Map Collision
                 if (_p.advancedCollision) {} else {
                     // Bottom Bounds
-
-                    // if (this.Cell.map.data[])
+                        
+                    // var tile = array[y * width + x]
+                    // this.Cell.width / this.tileWidth
 
                     // if (this.relativePos.y + _p.simpleBounding.pos.y + _p.simpleBounding.height > this.World.height) {
                     //     this.pos.y = this.World.height - this.offset.y + (this.height - (_p.simpleBounding.pos.y + _p.simpleBounding.height));
